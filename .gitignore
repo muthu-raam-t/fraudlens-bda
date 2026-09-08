@@ -1,0 +1,45 @@
+# ---- data (never commit; this is the whole point of HDFS) ----
+data/source/*
+!data/source/.gitkeep
+data/raw/*
+!data/raw/.gitkeep
+*.csv
+*.parquet
+*.crc
+_SUCCESS
+
+# ---- model artifacts ----
+artifacts/*
+!artifacts/.gitkeep
+*.cbm
+*.pkl
+*.joblib
+
+# ---- env / secrets ----
+.env
+
+# ---- python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# ---- node / react ----
+node_modules/
+ui/dist/
+ui/build/
+npm-debug.log*
+
+# ---- scala / spark ----
+target/
+project/target/
+derby.log
+metastore_db/
+spark-warehouse/
+
+# ---- os / editor ----
+.DS_Store
+.vscode/
+.idea/
+*.swp
