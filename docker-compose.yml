@@ -1,0 +1,150 @@
+services:
+  # ===================== HDFS =====================
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    hostname: namenode
+    restart: unless-stopped
+    ports:
+      - "9870:9870"
+      - "9000:9000"
+    environment:
+      - CLUSTER_NAME=fraudlens
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - CORE_CONF_hadoop_http_staticuser_user=root
+      - CORE_CONF_io_compression_codecs=org.apache.hadoop.io.compress.SnappyCodec
+      - HDFS_CONF_dfs_replication=1
+      - HDFS_CONF_dfs_permissions_enabled=false
+      - HDFS_CONF_dfs_blocksize=134217728
+      - HDFS_CONF_dfs_webhdfs_enabled=true
+      - YARN_CONF_yarn_resourcemanager_hostname=resourcemanager
+      - MAPRED_CONF_mapreduce_framework_name=yarn
+      - MAPRED_CONF_mapreduce_jobhistory_address=namenode:10020
+      - MAPRED_CONF_mapreduce_map_memory_mb=2048
+      - MAPRED_CONF_mapreduce_reduce_memory_mb=2048
+      - MAPRED_CONF_yarn_app_mapreduce_am_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
+      - MAPRED_CONF_mapreduce_map_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
+      - MAPRED_CONF_mapreduce_reduce_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
+    volumes:
+      - hdfs_namenode:/hadoop/dfs/name
+      - ./data/raw:/staging
+      - ./data/source:/source:ro
+      - ./mapreduce:/mapreduce
+    networks:
+      - fraudlens-net
+
+  datanode1:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    hostname: datanode1
+    restart: unless-stopped
+    ports:
+      - "9864:9864"
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=1
+      - HDFS_CONF_dfs_permissions_enabled=false
+      - HDFS_CONF_dfs_blocksize=134217728
+    volumes:
+      - hdfs_datanode1:/hadoop/dfs/data
+    networks:
+      - fraudlens-net
+    depends_on:
+      - namenode
+
+  # ===================== YARN =====================
+  resourcemanager:
+    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
+    hostname: resourcemanager
+    restart: unless-stopped
+    ports:
+      - "8088:8088"
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870 datanode1:9864
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - YARN_CONF_yarn_resourcemanager_hostname=resourcemanager
+      - YARN_CONF_yarn_resourcemanager_bind__host=0.0.0.0
+      - YARN_CONF_yarn_resourcemanager_scheduler_class=org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
+      - YARN_CONF_yarn_scheduler_maximum__allocation__mb=${YARN_MAX_ALLOC_MB:-8192}
+      - YARN_CONF_yarn_scheduler_minimum__allocation__mb=512
+      - MAPRED_CONF_mapreduce_framework_name=yarn
+    networks:
+      - fraudlens-net
+    depends_on:
+      - namenode
+      - datanode1
+
+  nodemanager:
+    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
+    hostname: nodemanager
+    restart: unless-stopped
+    ports:
+      - "8042:8042"
+    environment:
+      - SERVICE_PRECONDITION=namenode:9870 datanode1:9864 resourcemanager:8088
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - YARN_CONF_yarn_resourcemanager_hostname=resourcemanager
+      - YARN_CONF_yarn_nodemanager_resource_memory__mb=${YARN_NM_MEMORY_MB:-10240}
+      - YARN_CONF_yarn_nodemanager_resource_cpu__vcores=${YARN_NM_VCORES:-4}
+      - YARN_CONF_yarn_nodemanager_vmem__check__enabled=false
+      - YARN_CONF_yarn_nodemanager_pmem__check__enabled=false
+      - YARN_CONF_yarn_nodemanager_aux__services=mapreduce_shuffle
+      - MAPRED_CONF_mapreduce_framework_name=yarn
+      - MAPRED_CONF_yarn_app_mapreduce_am_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
+      - MAPRED_CONF_mapreduce_map_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
+      - MAPRED_CONF_mapreduce_reduce_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
+    networks:
+      - fraudlens-net
+    depends_on:
+      - resourcemanager
+
+  # ===================== SPARK =====================
+  spark-master:
+    image: bde2020/spark-master:3.0.0-hadoop3.2
+    hostname: spark-master
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+      - "4040:4040"
+    environment:
+      - HADOOP_CONF_DIR=/etc/hadoop/conf
+      - YARN_CONF_DIR=/etc/hadoop/conf
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    volumes:
+      - ./spark-apps:/spark-apps
+      - ./artifacts:/artifacts
+      - ./hadoop-conf:/etc/hadoop/conf:ro
+    networks:
+      - fraudlens-net
+    depends_on:
+      - namenode
+      - resourcemanager
+
+  spark-worker:
+    image: bde2020/spark-worker:3.0.0-hadoop3.2
+    hostname: spark-worker
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY:-8g}
+      - SPARK_WORKER_CORES=${SPARK_WORKER_CORES:-4}
+      - HADOOP_CONF_DIR=/etc/hadoop/conf
+      - YARN_CONF_DIR=/etc/hadoop/conf
+    volumes:
+      - ./spark-apps:/spark-apps
+      - ./artifacts:/artifacts
+      - ./hadoop-conf:/etc/hadoop/conf:ro
+    networks:
+      - fraudlens-net
+    depends_on:
+      - spark-master
+
+networks:
+  fraudlens-net:
+    driver: bridge
+
+volumes:
+  hdfs_namenode:
+  hdfs_datanode1:
