@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>yarn.resourcemanager.hostname</name>
+    <value>resourcemanager</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.address</name>
+    <value>resourcemanager:8032</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.scheduler.address</name>
+    <value>resourcemanager:8030</value>
+  </property>
+  <property>
+    <name>yarn.resourcemanager.resource-tracker.address</name>
+    <value>resourcemanager:8031</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.aux-services</name>
+    <value>mapreduce_shuffle</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.vmem-check-enabled</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>yarn.nodemanager.pmem-check-enabled</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>yarn.application.classpath</name>
+    <value>/opt/hadoop-3.2.1/etc/hadoop,/opt/hadoop-3.2.1/share/hadoop/common/*,/opt/hadoop-3.2.1/share/hadoop/common/lib/*,/opt/hadoop-3.2.1/share/hadoop/hdfs/*,/opt/hadoop-3.2.1/share/hadoop/hdfs/lib/*,/opt/hadoop-3.2.1/share/hadoop/mapreduce/*,/opt/hadoop-3.2.1/share/hadoop/mapreduce/lib/*,/opt/hadoop-3.2.1/share/hadoop/yarn/*,/opt/hadoop-3.2.1/share/hadoop/yarn/lib/*</value>
+  </property>
+</configuration>
