@@ -59,6 +59,7 @@ val OUTPUT_PARTITIONS = 120
 spark.conf.set("spark.sql.shuffle.partitions", OUTPUT_PARTITIONS.toString)
 spark.conf.set("spark.sql.parquet.compression.codec", "snappy")
 spark.conf.set("spark.sql.legacy.parquet.datetimeRebaseModeInWrite", "CORRECTED")
+spark.conf.set("spark.sql.legacy.timeParserPolicy", "CORRECTED")
 
 println("=" * 74)
 println(" PHASE 4: Scala preprocessing on Spark / YARN")
@@ -254,9 +255,12 @@ val featured = joined
   // back to the 1st of that month rather than dropping the row.
   .withColumn("txn_date",
     coalesce(
-      make_date(col("txn_year"), col("txn_month"), col("txn_day")),
-      make_date(col("txn_year"), col("txn_month"), lit(1)),
-      make_date(lit(2000), lit(1), lit(1))))
+      to_date(format_string("%04d-%02d-%02d",
+        col("txn_year"), col("txn_month"), col("txn_day")), "yyyy-MM-dd"),
+      // fall back to the 1st of the month for an impossible day
+      to_date(format_string("%04d-%02d-01",
+        col("txn_year"), col("txn_month")), "yyyy-MM-dd"),
+      to_date(lit("2000-01-01"), "yyyy-MM-dd")))
   .withColumn("txn_timestamp",
     to_timestamp(concat_ws(" ",
       date_format(col("txn_date"), "yyyy-MM-dd"),
