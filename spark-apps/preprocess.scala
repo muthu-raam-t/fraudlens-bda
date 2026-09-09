@@ -219,7 +219,7 @@ val joined = parsed
 //    The original amount is preserved; the cap is a separate column.
 // ---------------------------------------------------------------------------
 println(">>> Computing the 99th-percentile amount (approximate, 1 pass)")
-val quantiles = joined.stat.approxQuantile("amount_clean", Array(0.99), 0.01)
+val quantiles = joined.stat.approxQuantile("amount_clean", Array(0.99), 0.0001)
 val amountP99 = if (quantiles.nonEmpty) quantiles(0) else 1000.0
 println(f">>> amount p99 = $amountP99%.2f  (rows above are flagged, not removed)")
 
