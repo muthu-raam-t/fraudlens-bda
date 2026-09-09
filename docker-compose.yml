@@ -1,3 +1,11 @@
+# =============================================================================
+# NOTE ON ENV VAR NAMING (bde2020 images)
+# The entrypoint converts CONF env vars to XML properties with these rules:
+#     ___  ->  -        __  ->  _        _  ->  .
+# So yarn.nodemanager.aux-services must be written
+#    YARN_CONF_yarn_nodemanager_aux___services   (THREE underscores)
+# Getting this wrong produces a silently-ignored property.
+# =============================================================================
 services:
   # ===================== HDFS =====================
   namenode:
@@ -11,16 +19,19 @@ services:
       - CLUSTER_NAME=fraudlens
       - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
       - CORE_CONF_hadoop_http_staticuser_user=root
-      - CORE_CONF_io_compression_codecs=org.apache.hadoop.io.compress.SnappyCodec
       - HDFS_CONF_dfs_replication=1
       - HDFS_CONF_dfs_permissions_enabled=false
       - HDFS_CONF_dfs_blocksize=134217728
       - HDFS_CONF_dfs_webhdfs_enabled=true
       - YARN_CONF_yarn_resourcemanager_hostname=resourcemanager
+      - YARN_CONF_yarn_resourcemanager_address=resourcemanager:8032
+      - YARN_CONF_yarn_resourcemanager_scheduler_address=resourcemanager:8030
+      - YARN_CONF_yarn_resourcemanager_resource___tracker_address=resourcemanager:8031
+      - YARN_CONF_yarn_nodemanager_aux___services=mapreduce_shuffle
       - MAPRED_CONF_mapreduce_framework_name=yarn
-      - MAPRED_CONF_mapreduce_jobhistory_address=namenode:10020
       - MAPRED_CONF_mapreduce_map_memory_mb=2048
       - MAPRED_CONF_mapreduce_reduce_memory_mb=2048
+      - MAPRED_CONF_yarn_app_mapreduce_am_resource_mb=1536
       - MAPRED_CONF_yarn_app_mapreduce_am_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
       - MAPRED_CONF_mapreduce_map_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
       - MAPRED_CONF_mapreduce_reduce_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
@@ -62,10 +73,11 @@ services:
       - SERVICE_PRECONDITION=namenode:9870 datanode1:9864
       - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
       - YARN_CONF_yarn_resourcemanager_hostname=resourcemanager
-      - YARN_CONF_yarn_resourcemanager_bind__host=0.0.0.0
-      - YARN_CONF_yarn_resourcemanager_scheduler_class=org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler
-      - YARN_CONF_yarn_scheduler_maximum__allocation__mb=${YARN_MAX_ALLOC_MB:-8192}
-      - YARN_CONF_yarn_scheduler_minimum__allocation__mb=512
+      - YARN_CONF_yarn_resourcemanager_bind___host=0.0.0.0
+      - YARN_CONF_yarn_nodemanager_aux___services=mapreduce_shuffle
+      - YARN_CONF_yarn_scheduler_minimum___allocation___mb=512
+      - YARN_CONF_yarn_scheduler_maximum___allocation___mb=${YARN_MAX_ALLOC_MB:-4096}
+      - YARN_CONF_yarn_scheduler_maximum___allocation___vcores=${YARN_NM_VCORES:-8}
       - MAPRED_CONF_mapreduce_framework_name=yarn
     networks:
       - fraudlens-net
@@ -83,15 +95,25 @@ services:
       - SERVICE_PRECONDITION=namenode:9870 datanode1:9864 resourcemanager:8088
       - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
       - YARN_CONF_yarn_resourcemanager_hostname=resourcemanager
-      - YARN_CONF_yarn_nodemanager_resource_memory__mb=${YARN_NM_MEMORY_MB:-10240}
-      - YARN_CONF_yarn_nodemanager_resource_cpu__vcores=${YARN_NM_VCORES:-4}
-      - YARN_CONF_yarn_nodemanager_vmem__check__enabled=false
-      - YARN_CONF_yarn_nodemanager_pmem__check__enabled=false
-      - YARN_CONF_yarn_nodemanager_aux__services=mapreduce_shuffle
+      - YARN_CONF_yarn_resourcemanager_address=resourcemanager:8032
+      - YARN_CONF_yarn_resourcemanager_scheduler_address=resourcemanager:8030
+      - YARN_CONF_yarn_resourcemanager_resource___tracker_address=resourcemanager:8031
+      # --- the shuffle handler: BOTH properties are required for MapReduce ---
+      - YARN_CONF_yarn_nodemanager_aux___services=mapreduce_shuffle
+      - YARN_CONF_yarn_nodemanager_aux___services_mapreduce__shuffle_class=org.apache.hadoop.mapred.ShuffleHandler
+      - YARN_CONF_yarn_nodemanager_resource_memory___mb=${YARN_NM_MEMORY_MB:-6144}
+      - YARN_CONF_yarn_nodemanager_resource_cpu___vcores=${YARN_NM_VCORES:-8}
+      - YARN_CONF_yarn_nodemanager_vmem___check___enabled=false
+      - YARN_CONF_yarn_nodemanager_pmem___check___enabled=false
       - MAPRED_CONF_mapreduce_framework_name=yarn
+      - MAPRED_CONF_mapreduce_map_memory_mb=2048
+      - MAPRED_CONF_mapreduce_reduce_memory_mb=2048
+      - MAPRED_CONF_yarn_app_mapreduce_am_resource_mb=1536
       - MAPRED_CONF_yarn_app_mapreduce_am_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
       - MAPRED_CONF_mapreduce_map_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
       - MAPRED_CONF_mapreduce_reduce_env=HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1
+    volumes:
+      - ./mapreduce:/mapreduce
     networks:
       - fraudlens-net
     depends_on:
@@ -128,7 +150,7 @@ services:
       - "8081:8081"
     environment:
       - SPARK_MASTER=spark://spark-master:7077
-      - SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY:-8g}
+      - SPARK_WORKER_MEMORY=${SPARK_WORKER_MEMORY:-4g}
       - SPARK_WORKER_CORES=${SPARK_WORKER_CORES:-4}
       - HADOOP_CONF_DIR=/etc/hadoop/conf
       - YARN_CONF_DIR=/etc/hadoop/conf
