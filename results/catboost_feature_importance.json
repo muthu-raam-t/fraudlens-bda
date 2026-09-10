@@ -1,0 +1,86 @@
+{
+  "method": "TreeSHAP (mean absolute contribution)",
+  "rows_used": 2000,
+  "features": [
+    {
+      "feature": "mcc",
+      "mean_abs_shap": 0.864899
+    },
+    {
+      "feature": "vpn_flag",
+      "mean_abs_shap": 0.854047
+    },
+    {
+      "feature": "merchant_state",
+      "mean_abs_shap": 0.340418
+    },
+    {
+      "feature": "device_merchant_distance_km",
+      "mean_abs_shap": 0.286476
+    },
+    {
+      "feature": "use_chip",
+      "mean_abs_shap": 0.248921
+    },
+    {
+      "feature": "amount_log",
+      "mean_abs_shap": 0.216276
+    },
+    {
+      "feature": "amount_abs",
+      "mean_abs_shap": 0.169771
+    },
+    {
+      "feature": "is_foreign_or_unknown",
+      "mean_abs_shap": 0.149591
+    },
+    {
+      "feature": "month",
+      "mean_abs_shap": 0.07345
+    },
+    {
+      "feature": "is_refund",
+      "mean_abs_shap": 0.071464
+    },
+    {
+      "feature": "error_type",
+      "mean_abs_shap": 0.063062
+    },
+    {
+      "feature": "is_online",
+      "mean_abs_shap": 0.027266
+    },
+    {
+      "feature": "day",
+      "mean_abs_shap": 0.023053
+    },
+    {
+      "feature": "device_os",
+      "mean_abs_shap": 0.006777
+    },
+    {
+      "feature": "hour",
+      "mean_abs_shap": 0.003902
+    },
+    {
+      "feature": "geo_missing",
+      "mean_abs_shap": 0.003855
+    },
+    {
+      "feature": "minute",
+      "mean_abs_shap": 0.002289
+    },
+    {
+      "feature": "error_flag",
+      "mean_abs_shap": 0.000585
+    },
+    {
+      "feature": "hw_missing",
+      "mean_abs_shap": 0.0
+    },
+    {
+      "feature": "is_night",
+      "mean_abs_shap": 0.0
+    }
+  ]
+}

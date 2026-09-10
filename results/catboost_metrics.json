@@ -1,0 +1,142 @@
+{
+  "model": "catboost",
+  "role": "serving model (single-transaction latency + TreeSHAP)",
+  "trained_on": "stratified sample, NOT all 132.5M rows",
+  "train_rows": 3000000,
+  "test_rows": 1000000,
+  "train_fraud": 175424,
+  "test_fraud": 43198,
+  "scale_pos_weight": 16.101,
+  "iterations_requested": 600,
+  "iterations_used": 582,
+  "depth": 6,
+  "pr_auc": 0.69427,
+  "roc_auc": 0.952798,
+  "precision": 0.231101,
+  "recall": 0.915876,
+  "f1": 0.369074,
+  "brier_score": 0.082113,
+  "true_positives": 39564,
+  "false_positives": 131634,
+  "false_negatives": 3634,
+  "true_negatives": 825168,
+  "threshold_sweep": [
+    {
+      "threshold": 0.1,
+      "precision": 0.131354,
+      "recall": 0.975786,
+      "flagged": 320905
+    },
+    {
+      "threshold": 0.2,
+      "precision": 0.176099,
+      "recall": 0.955044,
+      "flagged": 234277
+    },
+    {
+      "threshold": 0.3,
+      "precision": 0.203894,
+      "recall": 0.939743,
+      "flagged": 199099
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.220643,
+      "recall": 0.926177,
+      "flagged": 181329
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.231101,
+      "recall": 0.915876,
+      "flagged": 171198
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.238112,
+      "recall": 0.903121,
+      "flagged": 163843
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.296852,
+      "recall": 0.788324,
+      "flagged": 114717
+    },
+    {
+      "threshold": 0.8,
+      "precision": 0.594288,
+      "recall": 0.612667,
+      "flagged": 44534
+    },
+    {
+      "threshold": 0.9,
+      "precision": 0.775605,
+      "recall": 0.549933,
+      "flagged": 30629
+    }
+  ],
+  "top_features": [
+    {
+      "feature": "mcc",
+      "mean_abs_shap": 0.864899
+    },
+    {
+      "feature": "vpn_flag",
+      "mean_abs_shap": 0.854047
+    },
+    {
+      "feature": "merchant_state",
+      "mean_abs_shap": 0.340418
+    },
+    {
+      "feature": "device_merchant_distance_km",
+      "mean_abs_shap": 0.286476
+    },
+    {
+      "feature": "use_chip",
+      "mean_abs_shap": 0.248921
+    },
+    {
+      "feature": "amount_log",
+      "mean_abs_shap": 0.216276
+    },
+    {
+      "feature": "amount_abs",
+      "mean_abs_shap": 0.169771
+    },
+    {
+      "feature": "is_foreign_or_unknown",
+      "mean_abs_shap": 0.149591
+    },
+    {
+      "feature": "month",
+      "mean_abs_shap": 0.07345
+    },
+    {
+      "feature": "is_refund",
+      "mean_abs_shap": 0.071464
+    },
+    {
+      "feature": "error_type",
+      "mean_abs_shap": 0.063062
+    },
+    {
+      "feature": "is_online",
+      "mean_abs_shap": 0.027266
+    },
+    {
+      "feature": "day",
+      "mean_abs_shap": 0.023053
+    },
+    {
+      "feature": "device_os",
+      "mean_abs_shap": 0.006777
+    },
+    {
+      "feature": "hour",
+      "mean_abs_shap": 0.003902
+    }
+  ],
+  "train_seconds": 601.3
+}
