@@ -1,0 +1,25 @@
+{
+  "caching": {
+    "uncached_pass1_s": 5.4,
+    "uncached_pass2_s": 2.6,
+    "cached_pass1_s": 10.0,
+    "cached_pass2_s": 2.1,
+    "speedup_repeat_access": 1.22,
+    "note": "compare uncached pass 2 with cached pass 2: both are repeat reads of the same data"
+  },
+  "join_strategy": {
+    "shuffle_join_s": 15.7,
+    "broadcast_join_s": 4.2,
+    "speedup": 3.79,
+    "lookup_table_size_kb": 799,
+    "note": "small dimension table joined against 132.5M fact rows"
+  },
+  "partition_pruning": {
+    "partition_filter_s": 0.1,
+    "partition_filter_rows": 9349643,
+    "non_partition_filter_s": 1.2,
+    "non_partition_filter_rows": 5522627,
+    "speedup": 11.73,
+    "note": "year is a partition column so Spark reads only the matching directories; hour is not, so every file is scanned"
+  }
+}
