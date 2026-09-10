@@ -58,6 +58,25 @@ for split in train test; do
 done
 du -sh "$DEST"/* 2>/dev/null
 
+# ---------------------------------------------------------------------------
+# CatBoost runs on the HOST, not in the cluster. Leaving 6 GB of YARN
+# containers running while pandas loads millions of rows is what pushes a
+# 16 GB machine into OOM. The Spark cluster is not needed from here on, so
+# stop it and hand the memory back.
+# ---------------------------------------------------------------------------
+echo
+echo ">>> Free memory before training:"
+free -g | awk 'NR<=2'
+if [ "${KEEP_CLUSTER_UP:-0}" != "1" ]; then
+  echo ">>> Stopping the Spark/Hadoop containers to free RAM"
+  echo "    (HDFS data is in named volumes and is NOT affected)"
+  echo "    restart later with:  docker compose start"
+  docker compose stop
+  sleep 3
+  echo ">>> Free memory after stopping containers:"
+  free -g | awk 'NR<=2'
+fi
+
 echo
 echo ">>> Training"
 echo "--------------------------------------------------------------"

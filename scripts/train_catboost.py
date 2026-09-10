@@ -37,15 +37,53 @@ def log(m):
     print("[phase7b] " + str(m), flush=True)
 
 
-def load_csv_dir(path):
-    """Spark writes a directory of part files, even after coalesce(1)."""
+# Downcast on load. float64 -> float32 and int64 -> int32 halves the frame,
+# which matters: 10.6M rows x 22 columns at default dtypes is several GB
+# BEFORE CatBoost copies it into a Pool.
+DTYPES = {c: "float32" for c in [
+    "amount_abs", "amount_log", "device_merchant_distance_km"]}
+DTYPES.update({c: "int32" for c in [
+    "hour", "day", "month", "minute", "mcc", "error_flag", "vpn_flag",
+    "geo_missing", "hw_missing", "is_online", "is_foreign_or_unknown",
+    "is_night", "is_refund", "is_fraud"]})
+DTYPES.update({c: "category" for c in CATEGORICAL})
+
+
+def load_csv_dir(path, max_rows=None, seed=42):
+    """
+    Spark writes a directory of part files, even after coalesce(1).
+
+    max_rows caps memory by downsampling, but ALWAYS keeps every fraud row --
+    the positives are the scarce resource at a 0.165 % base rate.
+    """
     if os.path.isfile(path):
-        return pd.read_csv(path)
-    parts = sorted(glob.glob(os.path.join(path, "part-*.csv")))
+        parts = [path]
+    else:
+        parts = sorted(glob.glob(os.path.join(path, "part-*.csv")))
     if not parts:
         raise SystemExit("No part-*.csv found in %s -- run "
                          "scripts/run_export_sample.sh first." % path)
-    return pd.concat([pd.read_csv(p) for p in parts], ignore_index=True)
+
+    frames = []
+    for part in parts:
+        frames.append(pd.read_csv(part, dtype=DTYPES, engine="c",
+                                  low_memory=False))
+    df = pd.concat(frames, ignore_index=True)
+    del frames
+
+    if max_rows and len(df) > max_rows:
+        pos = df[df[LABEL] == 1]
+        neg = df[df[LABEL] == 0]
+        keep_neg = max(max_rows - len(pos), 1000)
+        if keep_neg < len(neg):
+            neg = neg.sample(n=keep_neg, random_state=seed)
+        df = pd.concat([pos, neg], ignore_index=True)
+        df = df.sample(frac=1.0, random_state=seed).reset_index(drop=True)
+        log("capped %s to %s rows (all %s fraud rows kept)"
+            % (os.path.basename(path), format(len(df), ","),
+               format(int(pos.shape[0]), ",")))
+        del pos, neg
+    return df
 
 
 def main():
@@ -57,6 +95,15 @@ def main():
     ap.add_argument("--lr", type=float, default=0.08)
     ap.add_argument("--shap-rows", type=int, default=2000,
                     help="Rows used to compute global SHAP importance")
+    ap.add_argument("--max-train-rows", type=int, default=3_000_000,
+                    help="Cap on training rows. All fraud rows are always "
+                         "kept; only legitimate rows are downsampled. "
+                         "Guards against OOM on a 16 GB host.")
+    ap.add_argument("--max-test-rows", type=int, default=1_000_000)
+    ap.add_argument("--drop-features", default="",
+                    help="Comma-separated features to exclude, e.g. vpn_flag")
+    ap.add_argument("--thread-count", type=int, default=4,
+                    help="CatBoost worker threads; fewer means less memory")
     args = ap.parse_args()
 
     try:
@@ -74,13 +121,20 @@ def main():
     log("PHASE 7b: CatBoost serving model + SHAP")
     log("=" * 62)
 
-    train = load_csv_dir(args.train)
-    test = load_csv_dir(args.test)
+    train = load_csv_dir(args.train, args.max_train_rows)
+    test = load_csv_dir(args.test, args.max_test_rows)
     log("train: {:,} rows   test: {:,} rows".format(len(train), len(test)))
+
+    drop = [c.strip() for c in args.drop_features.split(",") if c.strip()]
+    if drop:
+        train = train.drop(columns=[c for c in drop if c in train.columns])
+        test = test.drop(columns=[c for c in drop if c in test.columns])
+        log("dropped features: %s" % ", ".join(drop))
 
     for frame in (train, test):
         for c in CATEGORICAL:
-            frame[c] = frame[c].fillna("UNKNOWN").astype(str)
+            if c in frame.columns:
+                frame[c] = frame[c].astype(str).fillna("UNKNOWN")
         frame.fillna(0, inplace=True)
 
     features = [c for c in train.columns if c != LABEL]
@@ -104,6 +158,7 @@ def main():
         scale_pos_weight=spw,
         random_seed=42,
         early_stopping_rounds=60,
+        thread_count=args.thread_count,
         verbose=100,
     )
 
