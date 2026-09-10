@@ -6,7 +6,7 @@
 |---|---|
 | **Course** | 23AID302 — Big Data Analytics |
 | **Team** | Team 16 |
-| **Faculty In Charge** | Sreeja B P |
+| **Faculty In Charge** | Dr Sreeja B P |
 | **Department** | School of Artificial Intelligence |
 | **Institution** | Amrita Vishwa Vidyapeetham, Coimbatore |
 | **Academic Year** | 2026–27 |
