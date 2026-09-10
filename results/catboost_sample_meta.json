@@ -1,0 +1,16 @@
+{
+  "source": "hdfs://namenode:9000/fraudlens/dataset/preprocessed",
+  "full_rows": 132500000,
+  "full_fraud": 218622,
+  "sampling": "all fraud rows kept; legitimate rows downsampled",
+  "negatives_per_positive_target": 60,
+  "legit_keep_fraction": 0.099162,
+  "train_rows": 10666952,
+  "train_fraud": 175424,
+  "test_rows": 2668735,
+  "test_fraud": 43198,
+  "scale_pos_weight": 59.807,
+  "split_rule": "user % 5 == 0 -> holdout (user-disjoint)",
+  "honest_note": "CatBoost is the SERVING model and is trained on this sample, not on all 132.5M rows. The distributed results are the Spark MLlib models from Phase 5.",
+  "elapsed_seconds": 75.4
+}
