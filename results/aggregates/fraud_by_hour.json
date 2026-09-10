@@ -1,0 +1,149 @@
+{
+  "description": "fraud rate by hour of day (0-23)",
+  "rows": [
+    {
+      "hour": 0,
+      "total_txns": 5519922,
+      "fraud_txns": 9159,
+      "fraud_rate_pct": 0.1659
+    },
+    {
+      "hour": 1,
+      "total_txns": 5519552,
+      "fraud_txns": 9115,
+      "fraud_rate_pct": 0.1651
+    },
+    {
+      "hour": 2,
+      "total_txns": 5515492,
+      "fraud_txns": 9268,
+      "fraud_rate_pct": 0.168
+    },
+    {
+      "hour": 3,
+      "total_txns": 5522570,
+      "fraud_txns": 9117,
+      "fraud_rate_pct": 0.1651
+    },
+    {
+      "hour": 4,
+      "total_txns": 5520985,
+      "fraud_txns": 9006,
+      "fraud_rate_pct": 0.1631
+    },
+    {
+      "hour": 5,
+      "total_txns": 5521305,
+      "fraud_txns": 9051,
+      "fraud_rate_pct": 0.1639
+    },
+    {
+      "hour": 6,
+      "total_txns": 5523232,
+      "fraud_txns": 9099,
+      "fraud_rate_pct": 0.1647
+    },
+    {
+      "hour": 7,
+      "total_txns": 5520379,
+      "fraud_txns": 9131,
+      "fraud_rate_pct": 0.1654
+    },
+    {
+      "hour": 8,
+      "total_txns": 5519430,
+      "fraud_txns": 9015,
+      "fraud_rate_pct": 0.1633
+    },
+    {
+      "hour": 9,
+      "total_txns": 5518268,
+      "fraud_txns": 9263,
+      "fraud_rate_pct": 0.1679
+    },
+    {
+      "hour": 10,
+      "total_txns": 5523085,
+      "fraud_txns": 9144,
+      "fraud_rate_pct": 0.1656
+    },
+    {
+      "hour": 11,
+      "total_txns": 5520364,
+      "fraud_txns": 9107,
+      "fraud_rate_pct": 0.165
+    },
+    {
+      "hour": 12,
+      "total_txns": 5518877,
+      "fraud_txns": 9131,
+      "fraud_rate_pct": 0.1655
+    },
+    {
+      "hour": 13,
+      "total_txns": 5522627,
+      "fraud_txns": 9269,
+      "fraud_rate_pct": 0.1678
+    },
+    {
+      "hour": 14,
+      "total_txns": 5522816,
+      "fraud_txns": 9168,
+      "fraud_rate_pct": 0.166
+    },
+    {
+      "hour": 15,
+      "total_txns": 5518526,
+      "fraud_txns": 9113,
+      "fraud_rate_pct": 0.1651
+    },
+    {
+      "hour": 16,
+      "total_txns": 5521307,
+      "fraud_txns": 8981,
+      "fraud_rate_pct": 0.1627
+    },
+    {
+      "hour": 17,
+      "total_txns": 5517866,
+      "fraud_txns": 9205,
+      "fraud_rate_pct": 0.1668
+    },
+    {
+      "hour": 18,
+      "total_txns": 5520062,
+      "fraud_txns": 9013,
+      "fraud_rate_pct": 0.1633
+    },
+    {
+      "hour": 19,
+      "total_txns": 5522378,
+      "fraud_txns": 9022,
+      "fraud_rate_pct": 0.1634
+    },
+    {
+      "hour": 20,
+      "total_txns": 5522677,
+      "fraud_txns": 9144,
+      "fraud_rate_pct": 0.1656
+    },
+    {
+      "hour": 21,
+      "total_txns": 5522121,
+      "fraud_txns": 9010,
+      "fraud_rate_pct": 0.1632
+    },
+    {
+      "hour": 22,
+      "total_txns": 5527319,
+      "fraud_txns": 9092,
+      "fraud_rate_pct": 0.1645
+    },
+    {
+      "hour": 23,
+      "total_txns": 5518840,
+      "fraud_txns": 8999,
+      "fraud_rate_pct": 0.1631
+    }
+  ]
+}

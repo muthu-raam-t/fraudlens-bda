@@ -1,0 +1,117 @@
+{
+  "by_os": [
+    {
+      "os": "Android",
+      "total_txns": 43697461,
+      "fraud_txns": 72344,
+      "fraud_rate_pct": 0.1656
+    },
+    {
+      "os": "iOS",
+      "total_txns": 38562136,
+      "fraud_txns": 63760,
+      "fraud_rate_pct": 0.1653
+    },
+    {
+      "os": "Windows",
+      "total_txns": 28276782,
+      "fraud_txns": 46479,
+      "fraud_rate_pct": 0.1644
+    },
+    {
+      "os": "macOS",
+      "total_txns": 11562260,
+      "fraud_txns": 18985,
+      "fraud_rate_pct": 0.1642
+    },
+    {
+      "os": "UNKNOWN",
+      "total_txns": 3977162,
+      "fraud_txns": 6540,
+      "fraud_rate_pct": 0.1644
+    },
+    {
+      "os": "Linux",
+      "total_txns": 3852840,
+      "fraud_txns": 6470,
+      "fraud_rate_pct": 0.1679
+    },
+    {
+      "os": "ChromeOS",
+      "total_txns": 2571359,
+      "fraud_txns": 4044,
+      "fraud_rate_pct": 0.1573
+    }
+  ],
+  "by_vpn": [
+    {
+      "vpn": 0,
+      "total_txns": 117927469,
+      "fraud_txns": 142696,
+      "fraud_rate_pct": 0.121
+    },
+    {
+      "vpn": 1,
+      "total_txns": 14572531,
+      "fraud_txns": 75926,
+      "fraud_rate_pct": 0.521
+    }
+  ],
+  "by_online": [
+    {
+      "online": 0,
+      "total_txns": 118018643,
+      "fraud_txns": 115245,
+      "fraud_rate_pct": 0.0976
+    },
+    {
+      "online": 1,
+      "total_txns": 14481357,
+      "fraud_txns": 103377,
+      "fraud_rate_pct": 0.7139
+    }
+  ],
+  "by_night": [
+    {
+      "night": 0,
+      "total_txns": 88334015,
+      "fraud_txns": 145815,
+      "fraud_rate_pct": 0.1651
+    },
+    {
+      "night": 1,
+      "total_txns": 44165985,
+      "fraud_txns": 72807,
+      "fraud_rate_pct": 0.1648
+    }
+  ],
+  "by_error": [
+    {
+      "had_error": 0,
+      "total_txns": 130436463,
+      "fraud_txns": 211021,
+      "fraud_rate_pct": 0.1618
+    },
+    {
+      "had_error": 1,
+      "total_txns": 2063537,
+      "fraud_txns": 7601,
+      "fraud_rate_pct": 0.3683
+    }
+  ],
+  "by_foreign": [
+    {
+      "foreign": 0,
+      "total_txns": 114527886,
+      "fraud_txns": 76332,
+      "fraud_rate_pct": 0.0666
+    },
+    {
+      "foreign": 1,
+      "total_txns": 17972114,
+      "fraud_txns": 142290,
+      "fraud_rate_pct": 0.7917
+    }
+  ],
+  "caveat": "vpn and os come from the synthetically appended device_metadata column; their fraud correlation is injected, not real-world"
+}

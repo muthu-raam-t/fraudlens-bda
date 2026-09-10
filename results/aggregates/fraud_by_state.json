@@ -1,0 +1,365 @@
+{
+  "description": "fraud rate by merchant state",
+  "rows": [
+    {
+      "state": "UNKNOWN",
+      "total_txns": 17130754,
+      "fraud_txns": 107864,
+      "fraud_rate_pct": 0.6297
+    },
+    {
+      "state": "CA",
+      "total_txns": 13803212,
+      "fraud_txns": 10005,
+      "fraud_rate_pct": 0.0725
+    },
+    {
+      "state": "TX",
+      "total_txns": 9521486,
+      "fraud_txns": 5685,
+      "fraud_rate_pct": 0.0597
+    },
+    {
+      "state": "FL",
+      "total_txns": 7773136,
+      "fraud_txns": 4907,
+      "fraud_rate_pct": 0.0631
+    },
+    {
+      "state": "NY",
+      "total_txns": 7726232,
+      "fraud_txns": 4685,
+      "fraud_rate_pct": 0.0606
+    },
+    {
+      "state": "OH",
+      "total_txns": 4752649,
+      "fraud_txns": 6922,
+      "fraud_rate_pct": 0.1456
+    },
+    {
+      "state": "IL",
+      "total_txns": 4526102,
+      "fraud_txns": 2528,
+      "fraud_rate_pct": 0.0559
+    },
+    {
+      "state": "PA",
+      "total_txns": 4475489,
+      "fraud_txns": 2847,
+      "fraud_rate_pct": 0.0636
+    },
+    {
+      "state": "NC",
+      "total_txns": 4148393,
+      "fraud_txns": 2460,
+      "fraud_rate_pct": 0.0593
+    },
+    {
+      "state": "GA",
+      "total_txns": 3403920,
+      "fraud_txns": 1911,
+      "fraud_rate_pct": 0.0561
+    },
+    {
+      "state": "NJ",
+      "total_txns": 3366288,
+      "fraud_txns": 2548,
+      "fraud_rate_pct": 0.0757
+    },
+    {
+      "state": "MI",
+      "total_txns": 3294515,
+      "fraud_txns": 2220,
+      "fraud_rate_pct": 0.0674
+    },
+    {
+      "state": "IN",
+      "total_txns": 3268336,
+      "fraud_txns": 2025,
+      "fraud_rate_pct": 0.062
+    },
+    {
+      "state": "WA",
+      "total_txns": 2869879,
+      "fraud_txns": 1871,
+      "fraud_rate_pct": 0.0652
+    },
+    {
+      "state": "TN",
+      "total_txns": 2687602,
+      "fraud_txns": 1734,
+      "fraud_rate_pct": 0.0645
+    },
+    {
+      "state": "VA",
+      "total_txns": 2255636,
+      "fraud_txns": 1570,
+      "fraud_rate_pct": 0.0696
+    },
+    {
+      "state": "MD",
+      "total_txns": 2019922,
+      "fraud_txns": 1367,
+      "fraud_rate_pct": 0.0677
+    },
+    {
+      "state": "MA",
+      "total_txns": 1941820,
+      "fraud_txns": 1137,
+      "fraud_rate_pct": 0.0586
+    },
+    {
+      "state": "SC",
+      "total_txns": 1902623,
+      "fraud_txns": 1120,
+      "fraud_rate_pct": 0.0589
+    },
+    {
+      "state": "MN",
+      "total_txns": 1868346,
+      "fraud_txns": 1094,
+      "fraud_rate_pct": 0.0586
+    },
+    {
+      "state": "AZ",
+      "total_txns": 1863342,
+      "fraud_txns": 1063,
+      "fraud_rate_pct": 0.057
+    },
+    {
+      "state": "WI",
+      "total_txns": 1810882,
+      "fraud_txns": 1056,
+      "fraud_rate_pct": 0.0583
+    },
+    {
+      "state": "AL",
+      "total_txns": 1805394,
+      "fraud_txns": 1030,
+      "fraud_rate_pct": 0.0571
+    },
+    {
+      "state": "KY",
+      "total_txns": 1770384,
+      "fraud_txns": 983,
+      "fraud_rate_pct": 0.0555
+    },
+    {
+      "state": "OK",
+      "total_txns": 1737216,
+      "fraud_txns": 1223,
+      "fraud_rate_pct": 0.0704
+    },
+    {
+      "state": "MO",
+      "total_txns": 1688337,
+      "fraud_txns": 1192,
+      "fraud_rate_pct": 0.0706
+    },
+    {
+      "state": "LA",
+      "total_txns": 1563072,
+      "fraud_txns": 785,
+      "fraud_rate_pct": 0.0502
+    },
+    {
+      "state": "CO",
+      "total_txns": 1455089,
+      "fraud_txns": 819,
+      "fraud_rate_pct": 0.0563
+    },
+    {
+      "state": "IA",
+      "total_txns": 1451626,
+      "fraud_txns": 1102,
+      "fraud_rate_pct": 0.0759
+    },
+    {
+      "state": "AR",
+      "total_txns": 1218548,
+      "fraud_txns": 667,
+      "fraud_rate_pct": 0.0547
+    },
+    {
+      "state": "CT",
+      "total_txns": 1139086,
+      "fraud_txns": 704,
+      "fraud_rate_pct": 0.0618
+    },
+    {
+      "state": "MS",
+      "total_txns": 1117829,
+      "fraud_txns": 824,
+      "fraud_rate_pct": 0.0737
+    },
+    {
+      "state": "KS",
+      "total_txns": 1009153,
+      "fraud_txns": 595,
+      "fraud_rate_pct": 0.059
+    },
+    {
+      "state": "OR",
+      "total_txns": 917417,
+      "fraud_txns": 581,
+      "fraud_rate_pct": 0.0633
+    },
+    {
+      "state": "NM",
+      "total_txns": 868899,
+      "fraud_txns": 557,
+      "fraud_rate_pct": 0.0641
+    },
+    {
+      "state": "NV",
+      "total_txns": 833808,
+      "fraud_txns": 608,
+      "fraud_rate_pct": 0.0729
+    },
+    {
+      "state": "UT",
+      "total_txns": 774498,
+      "fraud_txns": 487,
+      "fraud_rate_pct": 0.0629
+    },
+    {
+      "state": "HI",
+      "total_txns": 740362,
+      "fraud_txns": 541,
+      "fraud_rate_pct": 0.0731
+    },
+    {
+      "state": "WV",
+      "total_txns": 685915,
+      "fraud_txns": 296,
+      "fraud_rate_pct": 0.0432
+    },
+    {
+      "state": "NH",
+      "total_txns": 617264,
+      "fraud_txns": 323,
+      "fraud_rate_pct": 0.0523
+    },
+    {
+      "state": "RI",
+      "total_txns": 602440,
+      "fraud_txns": 331,
+      "fraud_rate_pct": 0.0549
+    },
+    {
+      "state": "NE",
+      "total_txns": 520489,
+      "fraud_txns": 424,
+      "fraud_rate_pct": 0.0815
+    },
+    {
+      "state": "ID",
+      "total_txns": 432398,
+      "fraud_txns": 245,
+      "fraud_rate_pct": 0.0567
+    },
+    {
+      "state": "DE",
+      "total_txns": 377054,
+      "fraud_txns": 176,
+      "fraud_rate_pct": 0.0467
+    },
+    {
+      "state": "ME",
+      "total_txns": 358653,
+      "fraud_txns": 168,
+      "fraud_rate_pct": 0.0468
+    },
+    {
+      "state": "SD",
+      "total_txns": 349027,
+      "fraud_txns": 215,
+      "fraud_rate_pct": 0.0616
+    },
+    {
+      "state": "ND",
+      "total_txns": 317920,
+      "fraud_txns": 141,
+      "fraud_rate_pct": 0.0444
+    },
+    {
+      "state": "MT",
+      "total_txns": 311549,
+      "fraud_txns": 189,
+      "fraud_rate_pct": 0.0607
+    },
+    {
+      "state": "VT",
+      "total_txns": 257830,
+      "fraud_txns": 178,
+      "fraud_rate_pct": 0.069
+    },
+    {
+      "state": "MEXICO",
+      "total_txns": 251210,
+      "fraud_txns": 1575,
+      "fraud_rate_pct": 0.627
+    },
+    {
+      "state": "DC",
+      "total_txns": 118324,
+      "fraud_txns": 60,
+      "fraud_rate_pct": 0.0507
+    },
+    {
+      "state": "WY",
+      "total_txns": 110155,
+      "fraud_txns": 81,
+      "fraud_rate_pct": 0.0735
+    },
+    {
+      "state": "CANADA",
+      "total_txns": 109515,
+      "fraud_txns": 46,
+      "fraud_rate_pct": 0.042
+    },
+    {
+      "state": "AK",
+      "total_txns": 98263,
+      "fraud_txns": 52,
+      "fraud_rate_pct": 0.0529
+    },
+    {
+      "state": "ITALY",
+      "total_txns": 46470,
+      "fraud_txns": 25033,
+      "fraud_rate_pct": 53.8692
+    },
+    {
+      "state": "UNITED KINGDOM",
+      "total_txns": 42674,
+      "fraud_txns": 17,
+      "fraud_rate_pct": 0.0398
+    },
+    {
+      "state": "GERMANY",
+      "total_txns": 28166,
+      "fraud_txns": 16,
+      "fraud_rate_pct": 0.0568
+    },
+    {
+      "state": "FRANCE",
+      "total_txns": 27871,
+      "fraud_txns": 14,
+      "fraud_rate_pct": 0.0502
+    },
+    {
+      "state": "CHINA",
+      "total_txns": 26637,
+      "fraud_txns": 8,
+      "fraud_rate_pct": 0.03
+    },
+    {
+      "state": "JAPAN",
+      "total_txns": 21328,
+      "fraud_txns": 246,
+      "fraud_rate_pct": 1.1534
+    }
+  ]
+}

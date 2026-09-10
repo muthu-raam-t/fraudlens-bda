@@ -1,0 +1,53 @@
+{
+  "description": "transaction count and fraud rate by amount bucket",
+  "rows": [
+    {
+      "bucket": "0-10",
+      "total_txns": 28149154,
+      "fraud_txns": 36647,
+      "fraud_rate_pct": 0.1302
+    },
+    {
+      "bucket": "10-25",
+      "total_txns": 25215230,
+      "fraud_txns": 26122,
+      "fraud_rate_pct": 0.1036
+    },
+    {
+      "bucket": "25-50",
+      "total_txns": 26846253,
+      "fraud_txns": 30628,
+      "fraud_rate_pct": 0.1141
+    },
+    {
+      "bucket": "50-100",
+      "total_txns": 36115645,
+      "fraud_txns": 50034,
+      "fraud_rate_pct": 0.1385
+    },
+    {
+      "bucket": "100-250",
+      "total_txns": 13599782,
+      "fraud_txns": 51170,
+      "fraud_rate_pct": 0.3763
+    },
+    {
+      "bucket": "250-500",
+      "total_txns": 2123007,
+      "fraud_txns": 19473,
+      "fraud_rate_pct": 0.9172
+    },
+    {
+      "bucket": "500-1000",
+      "total_txns": 359049,
+      "fraud_txns": 3331,
+      "fraud_rate_pct": 0.9277
+    },
+    {
+      "bucket": "1000+",
+      "total_txns": 91880,
+      "fraud_txns": 1217,
+      "fraud_rate_pct": 1.3246
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "total_transactions": 132500000,
+  "fraud_transactions": 218622,
+  "fraud_rate_pct": 0.165,
+  "raw_size_gb": 28.1,
+  "preprocessed_size_gb": 5.9,
+  "hdfs_blocks": 230,
+  "replication_factor": 1,
+  "mean_amount": 54.09,
+  "median_amount": 36.18,
+  "max_amount": 12758.2,
+  "distinct_states": 222,
+  "distinct_mcc": 109,
+  "year_range": [
+    1991,
+    2020
+  ]
+}

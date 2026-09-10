@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-09-10T16:50:29",
+  "source": "hdfs://namenode:9000/fraudlens/dataset/preprocessed",
+  "files": [
+    "fraud_by_state.json",
+    "fraud_by_mcc.json",
+    "fraud_by_hour.json",
+    "fraud_by_device.json",
+    "amount_distribution.json",
+    "dataset_summary.json"
+  ],
+  "total_size_kb": 18.4,
+  "elapsed_seconds": 126.3
+}
