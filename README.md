@@ -2,24 +2,6 @@
 
 **Scalable Feature Engineering and Class-Imbalance Classification on Containerized HDFS and Apache Spark**
 
-| | |
-|---|---|
-| **Course** | 23AID302 — Big Data Analytics |
-| **Team** | Team 16 |
-| **Faculty In Charge** | Dr Sreeja B P |
-| **Department** | School of Artificial Intelligence |
-| **Institution** | Amrita Vishwa Vidyapeetham, Coimbatore |
-| **Academic Year** | 2026–27 |
-
-| Member | Roll Number |
-|---|---|
-| Lalith Sagar | CB.AI.U4AID24009 |
-| Ruthwik | CB.AI.U4AID24023 |
-| Muthu Raam | CB.AI.U4AID24058 |
-| Prapul Chandra | CB.AI.U4AID24063 |
-
----
-
 ## Table of Contents
 
 1. [Project Status at a Glance](#1-project-status-at-a-glance)
