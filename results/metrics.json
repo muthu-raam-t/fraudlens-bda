@@ -1,0 +1,352 @@
+{
+  "dataset": {
+    "input": "hdfs://namenode:9000/fraudlens/dataset/preprocessed",
+    "sample_frac": 1.0,
+    "train_rows": 106000000,
+    "test_rows": 26500000,
+    "train_fraud": 175424,
+    "test_fraud": 43198,
+    "split_rule": "user %% 5 == 0 -> holdout (user-disjoint)",
+    "distinct_users": 2000,
+    "class_weight_fraud": 603.25
+  },
+  "models": {
+    "logistic_regression": {
+      "pr_auc": 0.022283,
+      "roc_auc": 0.90597,
+      "true_positives": 37700,
+      "false_positives": 5498428,
+      "false_negatives": 5498,
+      "true_negatives": 20958374,
+      "precision": 0.00681,
+      "recall": 0.872726,
+      "f1": 0.013514,
+      "accuracy_do_not_quote_this": 0.792305,
+      "train_seconds": 1524.4,
+      "threshold_sweep": [
+        {
+          "threshold": 0.1,
+          "precision": 0.002418,
+          "recall": 0.990879,
+          "flagged": 17701497
+        },
+        {
+          "threshold": 0.2,
+          "precision": 0.004966,
+          "recall": 0.941386,
+          "flagged": 8188537
+        },
+        {
+          "threshold": 0.3,
+          "precision": 0.006133,
+          "recall": 0.920413,
+          "flagged": 6482630
+        },
+        {
+          "threshold": 0.4,
+          "precision": 0.00655,
+          "recall": 0.904301,
+          "flagged": 5964143
+        },
+        {
+          "threshold": 0.5,
+          "precision": 0.00681,
+          "recall": 0.872726,
+          "flagged": 5536128
+        },
+        {
+          "threshold": 0.6,
+          "precision": 0.007508,
+          "recall": 0.810732,
+          "flagged": 4664619
+        },
+        {
+          "threshold": 0.7,
+          "precision": 0.012351,
+          "recall": 0.700843,
+          "flagged": 2451255
+        },
+        {
+          "threshold": 0.8,
+          "precision": 0.017815,
+          "recall": 0.4484,
+          "flagged": 1087300
+        },
+        {
+          "threshold": 0.9,
+          "precision": 0.026479,
+          "recall": 0.29837,
+          "flagged": 486755
+        }
+      ]
+    },
+    "random_forest": {
+      "pr_auc": 0.183173,
+      "roc_auc": 0.927619,
+      "true_positives": 38610,
+      "false_positives": 4090950,
+      "false_negatives": 4588,
+      "true_negatives": 22365852,
+      "precision": 0.00935,
+      "recall": 0.893791,
+      "f1": 0.018506,
+      "accuracy_do_not_quote_this": 0.845451,
+      "train_seconds": 1020.3,
+      "threshold_sweep": [
+        {
+          "threshold": 0.1,
+          "precision": 0.00163,
+          "recall": 1.0,
+          "flagged": 26500000
+        },
+        {
+          "threshold": 0.2,
+          "precision": 0.004632,
+          "recall": 0.954234,
+          "flagged": 8898960
+        },
+        {
+          "threshold": 0.3,
+          "precision": 0.006509,
+          "recall": 0.925205,
+          "flagged": 6140355
+        },
+        {
+          "threshold": 0.4,
+          "precision": 0.008653,
+          "recall": 0.910922,
+          "flagged": 4547365
+        },
+        {
+          "threshold": 0.5,
+          "precision": 0.00935,
+          "recall": 0.893791,
+          "flagged": 4129560
+        },
+        {
+          "threshold": 0.6,
+          "precision": 0.018945,
+          "recall": 0.637738,
+          "flagged": 1454134
+        },
+        {
+          "threshold": 0.7,
+          "precision": 0.022638,
+          "recall": 0.613987,
+          "flagged": 1171629
+        },
+        {
+          "threshold": 0.8,
+          "precision": 0.023525,
+          "recall": 0.581856,
+          "flagged": 1068441
+        },
+        {
+          "threshold": 0.9,
+          "precision": 0.1077,
+          "recall": 0.332029,
+          "flagged": 133176
+        }
+      ],
+      "top_features": [
+        {
+          "feature": "vpn_flag",
+          "importance": 0.21192
+        },
+        {
+          "feature": "is_foreign_or_unknown",
+          "importance": 0.202641
+        },
+        {
+          "feature": "imputed_zip",
+          "importance": 0.09527
+        },
+        {
+          "feature": "merchant_state_idx",
+          "importance": 0.082524
+        },
+        {
+          "feature": "mcc_frequency",
+          "importance": 0.077403
+        },
+        {
+          "feature": "device_merchant_distance_km",
+          "importance": 0.06778
+        },
+        {
+          "feature": "use_chip_idx",
+          "importance": 0.066503
+        },
+        {
+          "feature": "imputed_state",
+          "importance": 0.050401
+        },
+        {
+          "feature": "mcc",
+          "importance": 0.04973
+        },
+        {
+          "feature": "amount_zscore",
+          "importance": 0.02348
+        },
+        {
+          "feature": "is_online",
+          "importance": 0.01915
+        },
+        {
+          "feature": "amount_vs_user_mean",
+          "importance": 0.016432
+        },
+        {
+          "feature": "amount_abs",
+          "importance": 0.013515
+        },
+        {
+          "feature": "amount_log",
+          "importance": 0.009962
+        },
+        {
+          "feature": "amount_capped",
+          "importance": 0.008515
+        }
+      ]
+    },
+    "gbt": {
+      "pr_auc": 0.219626,
+      "roc_auc": 0.947723,
+      "true_positives": 39403,
+      "false_positives": 3866951,
+      "false_negatives": 3795,
+      "true_negatives": 22589851,
+      "precision": 0.010087,
+      "recall": 0.912149,
+      "f1": 0.019953,
+      "accuracy_do_not_quote_this": 0.853934,
+      "train_seconds": 4740.2,
+      "threshold_sweep": [
+        {
+          "threshold": 0.1,
+          "precision": 0.003685,
+          "recall": 0.984397,
+          "flagged": 11539744
+        },
+        {
+          "threshold": 0.2,
+          "precision": 0.007709,
+          "recall": 0.951595,
+          "flagged": 5332655
+        },
+        {
+          "threshold": 0.3,
+          "precision": 0.00898,
+          "recall": 0.935136,
+          "flagged": 4498663
+        },
+        {
+          "threshold": 0.4,
+          "precision": 0.009774,
+          "recall": 0.921107,
+          "flagged": 4071128
+        },
+        {
+          "threshold": 0.5,
+          "precision": 0.010087,
+          "recall": 0.912149,
+          "flagged": 3906354
+        },
+        {
+          "threshold": 0.6,
+          "precision": 0.010487,
+          "recall": 0.90569,
+          "flagged": 3730876
+        },
+        {
+          "threshold": 0.7,
+          "precision": 0.011321,
+          "recall": 0.877402,
+          "flagged": 3347942
+        },
+        {
+          "threshold": 0.8,
+          "precision": 0.050273,
+          "recall": 0.588129,
+          "flagged": 505360
+        },
+        {
+          "threshold": 0.9,
+          "precision": 0.123765,
+          "recall": 0.47986,
+          "flagged": 167487
+        }
+      ],
+      "top_features": [
+        {
+          "feature": "merchant_state_idx",
+          "importance": 0.386642
+        },
+        {
+          "feature": "vpn_flag",
+          "importance": 0.174211
+        },
+        {
+          "feature": "mcc",
+          "importance": 0.158503
+        },
+        {
+          "feature": "mcc_frequency",
+          "importance": 0.107129
+        },
+        {
+          "feature": "imputed_zip",
+          "importance": 0.048333
+        },
+        {
+          "feature": "amount_vs_user_mean",
+          "importance": 0.037769
+        },
+        {
+          "feature": "amount_abs",
+          "importance": 0.027374
+        },
+        {
+          "feature": "use_chip_idx",
+          "importance": 0.019772
+        },
+        {
+          "feature": "amount_zscore",
+          "importance": 0.009666
+        },
+        {
+          "feature": "error_type_idx",
+          "importance": 0.009196
+        },
+        {
+          "feature": "user_amount_mean",
+          "importance": 0.006135
+        },
+        {
+          "feature": "amount_log",
+          "importance": 0.005284
+        },
+        {
+          "feature": "user_amount_std",
+          "importance": 0.00392
+        },
+        {
+          "feature": "user_txn_count",
+          "importance": 0.001864
+        },
+        {
+          "feature": "is_online",
+          "importance": 0.00106
+        }
+      ]
+    }
+  },
+  "feature_count": 34,
+  "best_model": {
+    "name": "gbt",
+    "pr_auc": 0.219626
+  },
+  "total_seconds": 8137.7
+}
