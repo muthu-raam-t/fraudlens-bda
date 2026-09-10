@@ -44,3 +44,4 @@ spark-warehouse/
 .idea/
 *.swp
 catboost_info/
+catboost_info/
