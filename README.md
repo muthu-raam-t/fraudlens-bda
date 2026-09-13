@@ -2,6 +2,17 @@
 
 **Scalable Feature Engineering and Class-Imbalance Classification on Containerized HDFS and Apache Spark**
 
+An end-to-end distributed analytics pipeline that detects fraudulent credit card
+transactions at scale. 132,500,000 transactions (28.1 GB) stored in HDFS,
+processed with Hadoop MapReduce and Apache Spark on YARN, cleaned with a native
+Spark–Scala pipeline, modelled with Spark MLlib, and served through an
+explainable real-time risk console.
+
+Built on a containerized single-host cluster. Every figure in this document is
+measured on that cluster, not estimated.
+
+---
+
 ## Table of Contents
 
 1. [Project Status at a Glance](#1-project-status-at-a-glance)
@@ -35,17 +46,17 @@
 | 3 | Hadoop MapReduce job — fraud rate by merchant state | **COMPLETED** |
 | 3b | Spark equivalent of the same aggregation (engine benchmark) | **COMPLETED** |
 | 4 | Scala preprocessing pipeline on Spark / YARN | **COMPLETED** |
-| 5 | Distributed model training (Spark MLlib: LR, RF, GBT) | **PENDING** |
-| 6 | Performance tuning benchmarks (cache, broadcast, pruning) | **PENDING** |
-| 7a | Stratified sample export for the serving model | **PENDING** |
-| 7b | CatBoost serving model with TreeSHAP explanations | **PENDING** |
-| 8 | Dashboard aggregates (precomputed JSON) | **PENDING** |
-| 9 | FastAPI inference service | **NOT STARTED** |
-| 10 | React analytics dashboard | **NOT STARTED** |
-| 11 | Spark Structured Streaming scorer (Velocity requirement) | **NOT STARTED** |
-| 12 | Documentation, screenshots, final review deck | **IN PROGRESS** |
+| 5 | Distributed model training (Spark MLlib: LR, RF, GBT) | **COMPLETED** |
+| 6 | Performance tuning benchmarks (cache, broadcast, pruning) | **COMPLETED** |
+| 7a | Stratified sample export for the serving model | **COMPLETED** |
+| 7b | CatBoost serving model with TreeSHAP explanations | **COMPLETED** |
+| 8 | Dashboard aggregates (precomputed JSON) | **COMPLETED** |
+| 9 | FastAPI inference service | **COMPLETED** |
+| 10 | React analytics dashboard | **COMPLETED** |
+| 11 | Spark Structured Streaming scorer (Velocity requirement) | **COMPLETED** |
+| 12 | Documentation, architecture diagram, results | **COMPLETED** |
 
-**Code for Phases 5–8 is written, syntax-checked and committed. It has not yet been executed end-to-end.** Phases 9–11 are designed but not implemented.
+**Every phase has been executed end to end on real data.** All figures in this document are measured on this cluster, not estimated.
 
 ---
 
@@ -99,9 +110,13 @@ Build a distributed analytics system that detects fraudulent credit card transac
 
 **28.1 GB** of raw transaction data comprising **132,500,000 rows**, stored across **230 HDFS blocks** of 128 MB each. Verified via `hdfs fsck`: average block size 131,360,676 bytes, average block replication 1.0, filesystem HEALTHY.
 
-### Velocity — NOT STARTED (Phase 11)
+### Velocity — COMPLETED
 
-The batch pipeline is complete. A Spark Structured Streaming job that watches an HDFS directory, applies the saved PipelineModel to arriving micro-batches, and writes checkpointed verdicts is designed but not yet implemented.
+A Spark Structured Streaming job (Scala) watches an HDFS directory and applies the **same GBT PipelineModel trained on all 132,500,000 rows** to arriving micro-batches, writing checkpointed verdicts back to HDFS. Measured run: **12 micro-batches, 6,000 rows scored, 894 flagged**, with a 5-second processing trigger.
+
+The engineered features the model expects (per-user amount statistics, MCC frequency) cannot be derived from a single micro-batch, so 2,000 user rows and 109 MCC rows are computed once from the batch dataset and broadcast into the stream as a stream-static join.
+
+Structured Streaming is **micro-batch, not per-event**. That is how Spark operates and is stated rather than glossed over.
 
 ### Variety — COMPLETED
 
@@ -138,11 +153,11 @@ Fraud constitutes **218,622 of 132,500,000 transactions — 0.1650 %**. Accuracy
 | 2 | Implement a genuine Hadoop MapReduce job on YARN over the raw corpus | **COMPLETED** — 613 s, 225 map tasks, 222 output groups |
 | 3 | Quantify the MapReduce vs Spark performance difference on identical work | **COMPLETED** — 9.4x measured |
 | 4 | Implement a native Spark–Scala ETL performing parallel cleansing, imputation and feature derivation entirely in memory | **COMPLETED** — 19m 8s, 0 rows dropped |
-| 5 | Build and benchmark distributed ensemble classifiers under cost-sensitive weighting | **PENDING** — code written, not executed |
-| 6 | Measure the effect of Spark performance-tuning techniques | **PENDING** — code written, not executed |
-| 7 | Deliver explainable, low-latency per-transaction predictions | **PENDING** |
-| 8 | Serve results through an analytical dashboard | **NOT STARTED** |
-| 9 | Demonstrate real-time streaming ingestion and scoring | **NOT STARTED** |
+| 5 | Build and benchmark distributed ensemble classifiers under cost-sensitive weighting | **COMPLETED** — GBT best, PR-AUC 0.2196, recall 0.912 |
+| 6 | Measure the effect of Spark performance-tuning techniques | **COMPLETED** — 11.73x pruning, 3.79x broadcast, 1.22x caching |
+| 7 | Deliver explainable, low-latency per-transaction predictions | **COMPLETED** — CatBoost + TreeSHAP, millisecond scoring |
+| 8 | Serve results through an analytical dashboard | **COMPLETED** — FastAPI + React console |
+| 9 | Demonstrate real-time streaming ingestion and scoring | **COMPLETED** — 12 micro-batches, 6,000 rows |
 
 ---
 
@@ -294,7 +309,7 @@ Fraud constitutes **218,622 of 132,500,000 transactions — 0.1650 %**. Accuracy
                                      |
                                      v
 +------------------------------------------------------------------------------+
-|  5. DISTRIBUTED TRAINING - SPARK MLlib on YARN                  [PENDING]     |
+|  5. DISTRIBUTED TRAINING - SPARK MLlib on YARN                [COMPLETED]     |
 |------------------------------------------------------------------------------|
 |  spark-apps/train.py                                                          |
 |                                                                               |
@@ -340,7 +355,7 @@ Fraud constitutes **218,622 of 132,500,000 transactions — 0.1650 %**. Accuracy
         v                          v                            v
 +---------------------------+ +------------------------+ +----------------------+
 | 6. TUNING BENCHMARKS      | | 7. SERVING MODEL       | | 8. AGGREGATES        |
-|              [PENDING]    | |          [PENDING]     | |         [PENDING]    |
+|            [COMPLETED]    | |        [COMPLETED]     | |       [COMPLETED]    |
 |---------------------------| |------------------------| |----------------------|
 | A. cache vs no-cache      | | 7a export_sample.py:   | | aggregates.py        |
 |    (repeat aggregation)   | |   keep ALL 218,622     | |                      |
@@ -359,7 +374,7 @@ Fraud constitutes **218,622 of 132,500,000 transactions — 0.1650 %**. Accuracy
                                         |                          |
                                         v                          v
 +------------------------------------------------------------------------------+
-|  9. FastAPI INFERENCE SERVICE                               [NOT STARTED]     |
+|  9. FastAPI INFERENCE SERVICE                                 [COMPLETED]     |
 |------------------------------------------------------------------------------|
 |  Loads the CatBoost model ONCE at startup (a SparkSession would cost          |
 |  seconds per call; CatBoost answers in milliseconds)                          |
@@ -370,7 +385,7 @@ Fraud constitutes **218,622 of 132,500,000 transactions — 0.1650 %**. Accuracy
                                      |
                                      v
 +------------------------------------------------------------------------------+
-|  10. REACT ANALYTICS DASHBOARD (Vite + React + Recharts)    [NOT STARTED]     |
+|  10. REACT ANALYTICS DASHBOARD (Vite + React + Recharts)      [COMPLETED]     |
 |------------------------------------------------------------------------------|
 |  TAB 1 -- Live scoring:  transaction form -> verdict badge, probability       |
 |                          gauge, SHAP waterfall                                |
@@ -381,7 +396,7 @@ Fraud constitutes **218,622 of 132,500,000 transactions — 0.1650 %**. Accuracy
                                      ^
                                      |
 +------------------------------------------------------------------------------+
-|  11. SPARK STRUCTURED STREAMING SCORER  (VELOCITY)          [NOT STARTED]     |
+|  11. SPARK STRUCTURED STREAMING SCORER  (VELOCITY)            [COMPLETED]     |
 |------------------------------------------------------------------------------|
 |  readStream on an HDFS file source (explicit StructType -- streaming file     |
 |  sources CANNOT infer schema)                                                 |
@@ -493,6 +508,9 @@ An earlier version of the generator filled its sampling pool from the head of th
 | `not found: value make_date` | `make_date` entered the Scala API in Spark 3.3; this cluster runs 3.0 | `to_date(format_string(...))` instead |
 | `nullif` unresolved in Scala | SQL-only until Spark 3.5 | `when/otherwise` |
 | `is_outlier` all zeros | `approxQuantile` relative error 0.01 returned approximately the maximum, so nothing exceeded it | tightened to 0.0001 |
+| `Python in worker has different version 3.5 than that in driver 3.7` | spark-master is Alpine 3.10 (Python 3.7 only); nodemanager is Debian 9 (Python 3.5 only). PySpark refuses to run across minor versions and neither image can install the other's | Phase 11 rewritten in **Scala**, which launches no Python workers. Both distributed jobs are now Scala |
+| Host froze during CatBoost training | 10.6M rows in pandas while 6 GB of YARN containers were still resident on a 16 GB machine | row caps, dtype downcasting, and the runner now stops the cluster before host-side training |
+| Grocery transactions scored ~50% fraud in the UI | weighted training inflates raw scores by ~1:600 in odds | prior-shift calibration in the API; risk shown as lift over the base rate |
 
 ---
 
@@ -594,18 +612,71 @@ MapReduce materialises every intermediate key/value pair to disk between the map
 
 **Imputation counts (recorded, not hidden):** city 2,650,183; state 17,130,754; ZIP 17,974,284; device geo 5,300,156; device hardware 3,977,162.
 
-### 9.5 Pending Results
+### 9.5 Model Results — COMPLETED
 
-- **Phase 5** — PENDING. Will produce PR-AUC / ROC-AUC / precision / recall / F1 and a threshold sweep for LR, RF and GBT, plus tree feature importances.
-- **Phase 6** — PENDING. Will produce three measured speedup ratios (caching, broadcast join, partition pruning).
-- **Phase 7b** — PENDING. Will produce CatBoost PR-AUC, Brier score and global and per-row TreeSHAP attributions.
-- **Phase 8** — PENDING. Will produce six dashboard JSON files.
+**Spark MLlib, trained on all 132,500,000 rows.** Training run: 135 minutes 50 seconds. Train 106,000,000 rows (175,424 fraud), held-out 26,500,000 rows (43,198 fraud), user-disjoint. Class weight for fraud rows: 603.3.
 
----
+| Model | PR-AUC | ROC-AUC | Precision | Recall | F1 | Train time |
+|---|---|---|---|---|---|---|
+| **GBTClassifier** | **0.2196** | 0.9477 | 0.0101 | 0.9121 | 0.0200 | 4,740 s |
+| RandomForest | 0.1832 | 0.9276 | 0.0094 | 0.8938 | 0.0185 | 1,020 s |
+| LogisticRegression | 0.0223 | 0.9060 | 0.0068 | 0.8727 | 0.0135 | 1,524 s |
+
+**Why this table justifies the metric choice.** ROC-AUC separates these models by 4 percentage points (0.906 to 0.948) and would suggest they are near-equivalent. PR-AUC separates them by a factor of ten (0.022 to 0.220). On a 0.165% positive class, ROC-AUC is dominated by the enormous true-negative pool and is close to uninformative. This is the clearest empirical argument in the project for reporting PR-AUC.
+
+Low precision at the default 0.5 threshold is a direct consequence of cost-sensitive weighting: the model is told a missed fraud costs 603 times a false alarm, so it flags aggressively. The operating threshold is a deployment decision, not a model defect.
+
+**Tree feature importances (GBT):** merchant_state 0.387, vpn_flag 0.174, mcc 0.159, mcc_frequency 0.107, imputed_zip 0.048, amount_vs_user_mean 0.038.
+
+**CatBoost serving model.** 582 of 600 boosting iterations used (early stopping), depth 6, 601 seconds on the host.
+
+| Metric | Value |
+|---|---|
+| PR-AUC | 0.6943 |
+| ROC-AUC | 0.9528 |
+| Precision @ 0.5 | 0.2311 |
+| Recall @ 0.5 | 0.9159 |
+| F1 @ 0.5 | 0.3691 |
+| Brier score | 0.0821 |
+| Confusion @ 0.5 | TP 39,564 · FP 131,634 · FN 3,634 · TN 825,168 |
+
+**Threshold sweep — the operating-point decision:**
+
+| Threshold | Precision | Recall | Flagged |
+|---|---|---|---|
+| 0.1 | 0.131 | 0.976 | 320,905 |
+| 0.5 | 0.231 | 0.916 | 171,198 |
+| 0.7 | 0.297 | 0.788 | 114,717 |
+| 0.8 | 0.594 | 0.613 | 44,534 |
+| **0.9** | **0.776** | **0.550** | **30,629** |
+
+At 0.9 the model catches 55% of fraud with 78% precision — roughly one false alarm for every three flags, a workable review queue. At 0.5 it catches 92% of fraud but three of every four flags are wrong. Neither is "correct"; the choice depends on the cost of a missed fraud against the cost of a review.
+
+**A comparison that must NOT be made naively.** CatBoost's PR-AUC of 0.6943 is *not* better than the GBT's 0.2196. The two were evaluated on different test distributions:
+
+| Model | Test rows | Test fraud | Test base rate | PR-AUC | Lift over random |
+|---|---|---|---|---|---|
+| Spark GBT | 26,500,000 | 43,198 | 0.163% | 0.2196 | **135x** |
+| CatBoost | 1,000,000 | 43,198 | 4.32% | 0.6943 | 16x |
+
+A random classifier scores PR-AUC equal to the base rate, so the correct comparison is lift over that baseline. On that basis the **distributed GBT is the substantially stronger model**, and CatBoost's apparently higher figure is an artefact of being tested on a 26x easier class balance. Both were evaluated on the identical 43,198 fraud cases; only the negatives differ.
+
+### 9.6 Streaming — COMPLETED
+
+| Metric | Value |
+|---|---|
+| Micro-batches processed | 12 |
+| Rows scored | 6,000 |
+| Flagged as fraud | 894 (14.9%) |
+| Trigger interval | 5 seconds |
+| Broadcast join | 2,000 user rows + 109 MCC rows |
+| Model | GBT PipelineModel, 6 stages, loaded from HDFS |
+
+The 14.9% flag rate is the same cost-sensitive weighting effect seen in Phase 5, applied at the default threshold.
 
 ## 10. Models Used and Why
 
-**Status: code written and committed; execution PENDING**
+**Status: COMPLETED — all four models trained and evaluated**
 
 Four models across two tiers, with different jobs.
 
@@ -650,6 +721,37 @@ All three are trained **sequentially in a single run** of `spark-apps/train.py`,
 - A 9-point threshold sweep from 0.1 to 0.9, showing how precision and recall trade off as the decision point moves
 - Brier score for CatBoost — calibration matters because the fraud *probability*, not just the label, determines the operational threshold
 
+### Measured TreeSHAP importances, and what they reveal
+
+| Rank | Feature | Mean absolute SHAP |
+|---|---|---|
+| 1 | `mcc` | 0.8649 |
+| 2 | **`vpn_flag`** | **0.8540** |
+| 3 | `merchant_state` | 0.3404 |
+| 4 | `device_merchant_distance_km` | 0.2865 |
+| 5 | `use_chip` | 0.2489 |
+| 6 | `amount_log` | 0.2163 |
+| 7 | `amount_abs` | 0.1698 |
+| 8 | `is_foreign_or_unknown` | 0.1496 |
+
+> **This is the project's most important caveat.** `vpn_flag` is the second most influential feature, statistically tied with `mcc`, and it is **entirely synthetic** — fabricated by the dataset generator, which injected a correlation making VPN transactions roughly 4x more likely to be labelled fraud. The models are therefore learning the generator as much as they are learning fraud. The same applies in the Spark ensembles, where `vpn_flag` ranked first in Random Forest (0.212) and second in GBT (0.174), and partly to `is_foreign_or_unknown` and `imputed_zip`, which reflect injected nulls.
+>
+> Reported rather than hidden. `scripts/train_catboost.py --drop-features vpn_flag` retrains without it; quantifying the resulting drop is the first item of future work.
+
+The genuinely real signals are encouraging: `mcc` (merchant category), `merchant_state`, `device_merchant_distance_km` and the amount features all rank highly and all come from the source data or from defensible feature engineering.
+
+### Calibration in the serving layer
+
+CatBoost was trained on downsampled negatives with `scale_pos_weight`, which makes the effective training prior roughly balanced while the real base rate is 0.165%. Raw scores are therefore inflated by about 1:600 in odds terms — an ordinary grocery transaction returned ~50% and would have been flagged.
+
+The API corrects this before returning a score:
+
+```
+odds_true = odds_model x base_odds ,  base_odds = 0.00165 / (1 - 0.00165)
+```
+
+Ranking is unchanged; only the scale is fixed. A raw 0.6155 becomes a calibrated 0.264%, or 1.6x the base rate. The dashboard therefore reports **risk as a multiple of the base rate**, because on a 0.165% class an absolute 50% threshold would essentially never fire.
+
 ---
 
 ## 11. Challenges and Limitations
@@ -672,12 +774,16 @@ See §8.4 for the ten concrete engineering failures encountered and their resolu
 | **6 GB YARN allocation** | Training is slower than on a production cluster; GBT iterations limited to 15 | A `--sample-frac` flag exists; any sampling would be reported |
 | **Velocity is micro-batch** | Structured Streaming processes micro-batches, not true per-event streams | This is standard Spark behaviour and will be described accurately |
 | **`spark-shell -i` rather than a compiled sbt artifact** | Less production-like than a packaged JAR | Still genuine Scala executing distributed on YARN; avoids installing sbt in a container whose build network cannot resolve DNS |
+| **A synthetic feature is among the most influential** | `vpn_flag` ranks 2nd by SHAP in CatBoost and 1st/2nd in the Spark ensembles, despite being fabricated | Disclosed in §10 with measured importances; a `--drop-features` path exists to quantify the effect |
+| **PR-AUC is not comparable across the two test sets** | CatBoost's 0.6943 looks better than the GBT's 0.2196 but was measured on a 26x easier class balance | §9.5 reports lift over the random baseline instead (135x vs 16x), which reverses the ranking |
+| **Raw serving scores are not probabilities** | Weighted training inflates odds by ~1:600 | Corrected in the API; both the raw and calibrated values are returned for transparency |
+| **The interactive endpoint does not use the Spark model** | SHAP has no Spark MLlib support and a SparkSession costs seconds per call | The Spark GBT *is* deployed — in the Phase 11 streaming scorer. Both models and their roles are documented |
 
 ---
 
 ## 12. Big Data Tools vs Conventional Processing
 
-**Status: COMPLETED for storage and engine comparison; PENDING for tuning benchmarks**
+**Status: COMPLETED — engine, storage and tuning all measured**
 
 ### 12.1 Conceptual comparison
 
@@ -707,35 +813,41 @@ The claim "Spark is faster than MapReduce" is not asserted here; it was measured
 | Snappy Parquet (columnar binary) | 6.6 GB | 132,500,000 |
 | | **4.3x reduction, 0 rows lost** | |
 
-### 12.4 Spark tuning benchmarks — PENDING
+### 12.4 Spark tuning benchmarks — COMPLETED
 
-`spark-apps/tuning_benchmark.py` will measure, with adaptive query execution **disabled** so that Spark cannot silently optimise the comparisons into equivalence:
+Measured with adaptive query execution **disabled**, so Spark could not silently optimise the comparisons into equivalence.
 
-- **Caching** — the same aggregation run twice, uncached versus cached
-- **Broadcast versus shuffle join** — the 800 KB ZIP lookup joined against 132.5M rows, with `autoBroadcastJoinThreshold` forced to −1 for the shuffle case
-- **Partition pruning** — filtering on `year` (a partition column, so directories are skipped) versus `hour` (not a partition column, forcing a full scan)
+| Technique | Baseline | Tuned | Speedup |
+|---|---|---|---|
+| **Partition pruning** (filter on `year`, a partition column, vs `hour`, which is not) | 1.2 s | 0.1 s | **11.73x** |
+| **Broadcast vs shuffle join** (800 KB lookup against 132.5M rows) | 15.7 s | 4.2 s | **3.79x** |
+| **Caching** (repeat access to the same aggregation) | 2.6 s | 2.1 s | 1.22x |
+
+**The caching result is reported honestly rather than dressed up.** The benchmark selects only two columns, and Parquet's columnar layout already reduces that read to 2.6 seconds, leaving little I/O for caching to eliminate. Caching pays off on wide reads and expensive recomputation, not on a two-column scan that column pruning has already made cheap. The measurement is correct; it simply understates the technique for this particular query.
+
+Partition pruning is the standout, and it validates the `partitionBy("year", "month")` decision taken in Phase 4.
 
 ---
 
 ## 13. Requirement Coverage Matrix
 
-| Course requirement (23AID302) | Where satisfied | Status |
+| Requirement | Where satisfied | Status |
 |---|---|---|
 | **Volume** — very large datasets (GB/TB) | 28.1 GB, 132,500,000 rows, 230 HDFS blocks | DONE |
-| **Velocity** — streaming or real-time processing | Phase 11 — Structured Streaming scorer | NOT STARTED |
+| **Velocity** — streaming or real-time processing | Phase 11 — Structured Streaming scorer, 12 micro-batches, 6,000 rows | DONE |
 | **Variety** — any two of structured / semi-structured / unstructured | Structured CSV + nested `device_metadata` JSON | DONE |
 | **Veracity** — noisy / incomplete / inconsistent data | Regex sanitisation, sentinel imputation with flag columns, null-safe JSON parsing | DONE |
 | **Hadoop — HDFS** | Phases 1–2 | DONE |
 | **Hadoop — MapReduce** | Phase 3, Hadoop Streaming on YARN, 613 s | DONE |
-| **Apache Spark — DataFrame / Dataset API** | Phases 3b, 4, 5, 6, 8 | Phases 3b and 4 DONE |
-| **Scala** | Phase 4 — all preprocessing | DONE |
+| **Apache Spark — DataFrame / Dataset API** | Phases 3b, 4, 5, 6, 8, 11 | DONE |
+| **Scala** | Phase 4 preprocessing **and** Phase 11 streaming | DONE |
 | **Python** | Phases 1, 3, 3b, 5, 6, 7, 8 | DONE |
-| **Spark ML** | Phase 5 — LR, RF, GBT | PENDING |
+| **Spark ML** | Phase 5 — LR, RF, GBT on 132.5M rows | DONE |
 | **Data acquisition and pre-processing** | Phases 1–2, 4 | DONE |
-| **Batch or streaming processing** | Batch DONE (Phases 3–8); streaming NOT STARTED | PARTIAL |
-| **Analytical models (clustering / classification)** | Phase 5 classification | PENDING |
-| **Performance tuning (partitioning, caching)** | Phase 4 partitioning DONE; Phase 6 benchmarks PENDING | PARTIAL |
-| **Visualization and dashboarding** | Phase 10 React dashboard | NOT STARTED |
+| **Batch or streaming processing** | Batch (Phases 3–8) **and** streaming (Phase 11) | DONE |
+| **Analytical models (clustering / classification)** | Phase 5 classification, 4 models | DONE |
+| **Performance tuning (partitioning, caching)** | Phase 4 partitioning; Phase 6 measured 11.73x / 3.79x / 1.22x | DONE |
+| **Visualization and dashboarding** | Phase 10 React console + FastAPI | DONE |
 | **Large open dataset from Kaggle** | Erik Altman et al., Credit Card Transactions | DONE |
 
 ---
@@ -776,12 +888,18 @@ fraudlens-bda/
 ├── spark-apps/
 │   ├── preprocess.scala            # Phase 4 — Scala ETL
 │   ├── spark_same_agg.py           # Phase 3b — benchmark
+│   ├── stream_score.scala          # Phase 11 — Scala streaming scorer
 │   ├── train.py                    # Phase 5 — MLlib training
 │   ├── tuning_benchmark.py         # Phase 6
 │   ├── export_sample.py            # Phase 7a
 │   └── aggregates.py               # Phase 8
-├── api/                            # Phase 9  (NOT STARTED)
-├── ui/                             # Phase 10 (NOT STARTED)
+├── api/
+│   ├── main.py                     # Phase 9 — FastAPI, calibrated scoring + SHAP
+│   └── requirements.txt
+├── ui/                             # Phase 10 — Vite + React + Recharts
+│   ├── index.html
+│   ├── package.json
+│   └── src/{App.jsx, main.jsx, styles.css}
 ├── artifacts/                      # models + metrics (gitignored)
 ├── results/                        # committed metrics for the report
 ├── data/                           # source + staging (gitignored)
@@ -801,7 +919,7 @@ Docker with Compose V2, Python 3.10+ on the host, roughly 80 GB free disk, 16 GB
 ### Setup
 
 ```bash
-git clone git@github.com:muthu-raam-t/fraudlens-bda.git
+git clone <your-repo-url>
 cd fraudlens-bda
 python3 -m venv .venv && source .venv/bin/activate
 pip install pandas numpy
@@ -842,7 +960,22 @@ bash scripts/run_tuning.sh        # ~20 min
 bash scripts/run_export_sample.sh # ~10 min
 pip install catboost shap scikit-learn
 bash scripts/run_catboost.sh      # ~15 min
-bash scripts/run_aggregates.sh    # ~15 min
+bash scripts/run_aggregates.sh    # ~2 min
+```
+
+### Phases 9–10 — the product, one command
+
+```bash
+bash scripts/start_app.sh         # API + dashboard, Ctrl-C stops both
+```
+
+Dashboard http://localhost:5173 · API docs http://localhost:8000/docs
+
+### Phase 11 — streaming
+
+```bash
+bash scripts/run_streaming.sh     # terminal 1
+bash scripts/feed_stream.sh       # terminal 2
 ```
 
 ### Dashboards
@@ -920,4 +1053,4 @@ Target venues consistent with the literature survey would be IEEE ICSCNA, IEEE S
 
 ---
 
-*Last updated: 10 September 2026, after Phase 4 completion. Phases 5–8 implemented and committed, pending execution.*
+*Last updated: 13 September 2026 — all twelve phases executed. Every figure in this document is measured on this cluster.*

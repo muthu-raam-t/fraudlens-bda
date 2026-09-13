@@ -1,0 +1,269 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="4056" viewBox="0 0 1600 4056">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#1a1208"/></marker></defs>
+<rect x="0" y="0" width="1600" height="4056" fill="#fdfbf6"/>
+<rect x="40" y="40" width="1520" height="130" rx="6" fill="#ffffff" stroke="#1a1208" stroke-width="3.5"/>
+<text x="800.0" y="82" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="bold" text-anchor="middle" fill="#1a1208">PROPOSED SYSTEM ARCHITECTURE</text>
+<text x="800.0" y="108" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="14.5" font-weight="normal" text-anchor="middle" fill="#4a3c2e">FraudLens - Distributed Credit Card Fraud Analytics Framework</text>
+<text x="800.0" y="130" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="middle" fill="#7a6753">Containerized Hadoop HDFS  +  YARN  +  Apache Spark</text>
+<text x="800.0" y="152" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="middle" fill="#2c5c28">ALL TWELVE PHASES EXECUTED  -  every figure below is measured on this cluster</text>
+<line x1="800" y1="170" x2="800" y2="204" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<rect x="40" y="204" width="1520" height="142" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="40" y="204" width="1520" height="4" rx="2" fill="#3f7d3a"/>
+<text x="60" y="234" font-family="Helvetica, Arial, sans-serif" font-size="17.5" font-weight="bold" text-anchor="start" fill="#1a1208">0.  SOURCE DATA ACQUISITION</text>
+<rect x="1394" y="216" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="1468.0" y="232.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="60" y="260" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">Erik Altman et al., "Credit Card Transactions" (Kaggle)</text>
+<text x="60" y="280" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">24,386,900 real transactions   |   2.2 GB CSV   |   15 columns</text>
+<text x="60" y="300" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">User, Card, Year, Month, Day, Time, Amount, Use Chip, Merchant Name/City/State,</text>
+<text x="60" y="320" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">Zip, MCC, Errors?, Is Fraud?</text>
+<line x1="800" y1="346" x2="800" y2="380" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<rect x="40" y="380" width="1520" height="264" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="40" y="380" width="1520" height="4" rx="2" fill="#3f7d3a"/>
+<text x="60" y="410" font-family="Helvetica, Arial, sans-serif" font-size="17.5" font-weight="bold" text-anchor="start" fill="#1a1208">1.  SYNTHETIC SCALING</text>
+<rect x="1394" y="392" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="1468.0" y="408.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="60" y="436" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="bold" text-anchor="start" fill="#7a6753">scripts/generate_chunk.py   [Python, host machine]</text>
+<text x="60" y="458" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">Pool-sample 17.7% of EVERY chunk across the whole file  -&gt;  full user coverage</text>
+<text x="60" y="478" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">  (a head-of-file read yielded only 248 distinct users - fixed to 1,600)</text>
+<text x="60" y="498" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">Jitter: amount +/-3%, day +/-2, time resampled</text>
+<text x="60" y="518" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">APPEND device_metadata -&gt; nested JSON {network{vpn,ip}, geo{lat,lon}, hardware{os}}</text>
+<text x="60" y="538" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">  fabricated, supplies the SEMI-STRUCTURED half of the Variety requirement</text>
+<text x="60" y="558" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">Inject ~2% nulls into merchant_city / merchant_state / zip / errors</text>
+<text x="60" y="578" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">LEAKAGE CONTROL: user % 5 == 0 -&gt; holdout;  chunks 1-4 train, chunk 5 holdout</text>
+<text x="60" y="598" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="618" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">OUTPUT:  5 chunks x ~6.04 GB  =  28.1 GB  /  132,500,000 rows</text>
+<line x1="800" y1="644" x2="800" y2="688" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<text x="814.0" y="670.0" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12" font-weight="normal" text-anchor="start" fill="#6b5a48">generate -&gt; put -&gt; delete  (local disk never exceeds one chunk)</text>
+<rect x="40" y="688" width="1520" height="222" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="40" y="688" width="1520" height="4" rx="2" fill="#3f7d3a"/>
+<text x="60" y="718" font-family="Helvetica, Arial, sans-serif" font-size="17.5" font-weight="bold" text-anchor="start" fill="#1a1208">2.  DISTRIBUTED STORAGE - HADOOP HDFS</text>
+<rect x="1394" y="700" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="1468.0" y="716.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="60" y="744" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">1 NameNode (metadata)  +  1 DataNode (blocks)</text>
+<text x="60" y="764" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">Block size 128 MB   |   Replication factor 1   |   230 blocks</text>
+<text x="60" y="784" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">fsck: HEALTHY, 0 under-replicated, average block 131,360,676 B</text>
+<text x="60" y="804" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="824" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">/fraudlens/dataset/unprocessed/    28.1 GB raw CSV   &lt;- MapReduce AND Spark</text>
+<text x="60" y="844" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">/fraudlens/dataset/preprocessed/    6.6 GB Parquet   &lt;- all ML phases</text>
+<text x="60" y="864" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">/fraudlens/lookup/zip_coords.csv    800 KB           &lt;- broadcast table</text>
+<text x="60" y="884" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">/fraudlens/{mapreduce_output, models, aggregates, streaming}/</text>
+<line x1="800" y1="910" x2="800" y2="928" stroke="#1a1208" stroke-width="3"/>
+<line x1="412" y1="928" x2="1187" y2="928" stroke="#1a1208" stroke-width="3"/>
+<text x="800.0" y="950" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="middle" fill="#6b5a48">same raw CSV to both engines  -&gt;  this comparison measures the ENGINE, not the file format</text>
+<line x1="412" y1="928" x2="412" y2="980" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<line x1="1187" y1="928" x2="1187" y2="980" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<rect x="40" y="980" width="740" height="232" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="40" y="980" width="740" height="4" rx="2" fill="#3f7d3a"/>
+<text x="60" y="1010" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" text-anchor="start" fill="#1a1208">3A.  HADOOP MAPREDUCE</text>
+<rect x="614" y="992" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="688.0" y="1008.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="60" y="1034" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="bold" text-anchor="start" fill="#7a6753">Hadoop Streaming on YARN</text>
+<text x="60" y="1058" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a">mapper.py   -&gt;  state \t fraud_flag</text>
+<text x="60" y="1077" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a">reducer.py  -&gt;  per-state totals + rate</text>
+<text x="60" y="1096" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="1115" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a">225 map tasks, 4 reducers</text>
+<text x="60" y="1134" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="bold" text-anchor="start" fill="#8a2f2f">2.09 GB SPILLED TO LOCAL DISK</text>
+<text x="60" y="1153" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a">265,000,000 spilled records</text>
+<text x="60" y="1172" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="1191" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="bold" text-anchor="start" fill="#1a1208">ELAPSED:  613 s   (10m 13s)</text>
+<rect x="820" y="980" width="740" height="232" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="820" y="980" width="740" height="4" rx="2" fill="#3f7d3a"/>
+<text x="840.0" y="1010" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" text-anchor="start" fill="#1a1208">3B.  APACHE SPARK</text>
+<rect x="1394" y="992" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="1468.0" y="1008.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="840.0" y="1034" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="bold" text-anchor="start" fill="#7a6753">PySpark DataFrame API on YARN</text>
+<text x="840.0" y="1058" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a">groupBy(state).agg(count, sum)</text>
+<text x="840.0" y="1077" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="840.0" y="1096" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="840.0" y="1115" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a">in-memory shuffle</text>
+<text x="840.0" y="1134" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a">no intermediate materialisation</text>
+<text x="840.0" y="1153" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="840.0" y="1172" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="840.0" y="1191" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="bold" text-anchor="start" fill="#1a1208">ELAPSED:  65.3 s</text>
+<line x1="412" y1="1212" x2="412" y2="1238" stroke="#1a1208" stroke-width="3"/>
+<line x1="1187" y1="1212" x2="1187" y2="1238" stroke="#1a1208" stroke-width="3"/>
+<line x1="412" y1="1238" x2="1187" y2="1238" stroke="#1a1208" stroke-width="3"/>
+<line x1="800" y1="1238" x2="800" y2="1268" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<rect x="420" y="1268" width="760" height="104" rx="6" fill="#efe6d4" stroke="#1a1208" stroke-width="3"/>
+<text x="800.0" y="1308" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#1a1208">MEASURED RESULT:   9.4x SPEEDUP</text>
+<text x="800.0" y="1334" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="middle" fill="#4a3c2e">identical input, identical output - 222 states,</text>
+<text x="800.0" y="1354" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="normal" text-anchor="middle" fill="#4a3c2e">132,500,000 reconciled, 0.1650% fraud rate</text>
+<line x1="800" y1="1372" x2="800" y2="1406" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<rect x="40" y="1406" width="1520" height="424" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="40" y="1406" width="1520" height="4" rx="2" fill="#3f7d3a"/>
+<text x="60" y="1436" font-family="Helvetica, Arial, sans-serif" font-size="17.5" font-weight="bold" text-anchor="start" fill="#1a1208">4.  DISTRIBUTED PREPROCESSING - NATIVE SPARK-SCALA on YARN</text>
+<rect x="1394" y="1418" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="1468.0" y="1434.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="60" y="1462" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="bold" text-anchor="start" fill="#7a6753">spark-apps/preprocess.scala   [Scala, spark-shell --master yarn]</text>
+<text x="60" y="1484" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">a) Explicit StructType schema        - no inferSchema, saves a full 28 GB pass</text>
+<text x="60" y="1504" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">b) regexp_replace "[$,]"              - "$1,204.55"  -&gt;  1204.55</text>
+<text x="60" y="1524" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">c) Label cast                        - "Yes"/"No"   -&gt;  1 / 0</text>
+<text x="60" y="1544" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">d) lpad(split(zip,"."), 5, "0")       - "4917.0"     -&gt;  "04917"</text>
+<text x="60" y="1564" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">e) from_json(device_metadata, declared schema)   - null-safe nested parse</text>
+<text x="60" y="1584" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">f) SENTINEL IMPUTATION + FLAG COLUMNS            - never .na.drop()</text>
+<text x="60" y="1604" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">g) BROADCAST JOIN: zip_coords (27,321 rows) x 132.5M  -&gt; merchant lat/lon</text>
+<text x="60" y="1624" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">h) Haversine distance device &lt;-&gt; merchant</text>
+<text x="60" y="1644" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">i) approxQuantile p99  -&gt;  is_outlier flag + amount_capped</text>
+<text x="60" y="1664" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">     original amount PRESERVED - large amounts are genuine fraud signal</text>
+<text x="60" y="1684" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">j) Assembled txn_timestamp  -&gt;  day_of_week, is_weekend, day_of_year</text>
+<text x="60" y="1704" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">k) Derived: amount_log, is_refund, is_online, is_night, is_foreign_or_unknown</text>
+<text x="60" y="1724" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">l) repartition(120, year, month) then partitionBy(year, month)</text>
+<text x="60" y="1744" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="1764" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">VERIFIED:   rows in 132,500,000  =  rows out 132,500,000   |   DROPPED: 0</text>
+<text x="60" y="1784" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">            null amounts / states / zips / timestamps = 0</text>
+<text x="60" y="1804" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">ELAPSED: 19m 08s      OUTPUT: 6.6 GB Snappy Parquet, 43 columns</text>
+<line x1="800" y1="1830" x2="800" y2="1864" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<rect x="40" y="1864" width="1520" height="684" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="40" y="1864" width="1520" height="4" rx="2" fill="#3f7d3a"/>
+<text x="60" y="1894" font-family="Helvetica, Arial, sans-serif" font-size="17.5" font-weight="bold" text-anchor="start" fill="#1a1208">5.  DISTRIBUTED TRAINING - SPARK MLlib on YARN</text>
+<rect x="1394" y="1876" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="1468.0" y="1892.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="60" y="1920" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="bold" text-anchor="start" fill="#7a6753">spark-apps/train.py   [PySpark]</text>
+<text x="60" y="1942" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">FEATURE ENGINEERING (distributed over all 132.5M rows):</text>
+<text x="60" y="1962" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   groupBy(user) -&gt; amount mean/std/count  (~2k rows)  -&gt; BROADCAST back</text>
+<text x="60" y="1982" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   groupBy(mcc)  -&gt; mcc_frequency                      -&gt; BROADCAST back</text>
+<text x="60" y="2002" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   derived -&gt; amount_vs_user_mean, amount_zscore   (no feature uses is_fraud)</text>
+<text x="60" y="2022" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="2042" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">SPLIT: user % 5 == 0 -&gt; holdout. Same rule as generation, so no user appears</text>
+<text x="60" y="2062" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">       on both sides. A random split would leak (sampled WITH replacement).</text>
+<text x="60" y="2082" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">CACHE train_df + test_df    |    weightCol = negatives/positives  (~605x)</text>
+<text x="60" y="2102" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="2122" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">TWO FEATURE PIPELINES, deliberately different:</text>
+<text x="60" y="2142" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   TREES : StringIndexer -&gt; VectorAssembler -&gt; RF / GBT</text>
+<text x="60" y="2162" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   LINEAR: StringIndexer -&gt; OneHotEncoder -&gt; VectorAssembler</text>
+<text x="60" y="2182" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">                         -&gt; StandardScaler(withMean=false) -&gt; LR</text>
+<text x="60" y="2202" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">     without one-hot, LR reads merchant_state as an ORDERED number;</text>
+<text x="60" y="2222" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">     without scaling, amount 0-30,000 swamps the binary flags</text>
+<text x="60" y="2242" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="2262" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">MODELS (all three trained sequentially in ONE run):</text>
+<text x="60" y="2282" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   1. LogisticRegression      - deliberately simple baseline</text>
+<text x="60" y="2302" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   2. RandomForestClassifier  - ensemble baseline + feature importances</text>
+<text x="60" y="2322" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   3. GBTClassifier           - PRIMARY distributed model</text>
+<text x="60" y="2342" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="2362" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">RESULTS on the 26,500,000-row user-disjoint holdout (135m 50s total):</text>
+<text x="60" y="2382" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">                        PR-AUC    ROC-AUC    RECALL        F1</text>
+<text x="60" y="2402" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   GBT  (best)          0.2196     0.9477    0.9121    0.0200</text>
+<text x="60" y="2422" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   Random Forest        0.1832     0.9276    0.8938    0.0185</text>
+<text x="60" y="2442" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   LogisticRegression   0.0223     0.9060    0.8727    0.0135</text>
+<text x="60" y="2462" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="2482" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">ROC-AUC separates these by 4 points; PR-AUC separates them 10x.</text>
+<text x="60" y="2502" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">That gap IS the argument for PR-AUC on a 0.1650% positive class.</text>
+<text x="60" y="2522" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">Accuracy is not quoted: "never fraud" scores 99.835%.</text>
+<line x1="800" y1="2548" x2="800" y2="2572" stroke="#1a1208" stroke-width="3"/>
+<line x1="280" y1="2572" x2="1320" y2="2572" stroke="#1a1208" stroke-width="3"/>
+<line x1="280" y1="2572" x2="280" y2="2602" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<line x1="800" y1="2572" x2="800" y2="2602" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<line x1="1320" y1="2572" x2="1320" y2="2602" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<rect x="40" y="2602" width="480" height="366" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="40" y="2602" width="480" height="4" rx="2" fill="#3f7d3a"/>
+<text x="58.0" y="2632" font-family="Helvetica, Arial, sans-serif" font-size="15.5" font-weight="bold" text-anchor="start" fill="#1a1208">6. TUNING BENCHMARKS</text>
+<rect x="354" y="2646" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="428.0" y="2662.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="58.0" y="2690" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">MEASURED, adaptive exec off</text>
+<text x="58.0" y="2708" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="58.0" y="2726" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">partition pruning   11.73x</text>
+<text x="58.0" y="2744" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">  year (partition col) vs</text>
+<text x="58.0" y="2762" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">  hour (full scan)</text>
+<text x="58.0" y="2780" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="58.0" y="2798" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">broadcast join       3.79x</text>
+<text x="58.0" y="2816" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">  800 KB x 132.5M rows</text>
+<text x="58.0" y="2834" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="58.0" y="2852" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">caching              1.22x</text>
+<text x="58.0" y="2870" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">  understated here: column</text>
+<text x="58.0" y="2888" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">  pruning already cut the</text>
+<text x="58.0" y="2906" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">  read to 2.6 s, leaving</text>
+<text x="58.0" y="2924" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">  little I/O to save.</text>
+<text x="58.0" y="2942" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">  Reported as measured.</text>
+<rect x="560" y="2602" width="480" height="366" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="560" y="2602" width="480" height="4" rx="2" fill="#3f7d3a"/>
+<text x="578.0" y="2632" font-family="Helvetica, Arial, sans-serif" font-size="15.5" font-weight="bold" text-anchor="start" fill="#1a1208">7. SERVING MODEL - CatBoost</text>
+<rect x="874" y="2646" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="948.0" y="2662.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="578.0" y="2690" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">3,000,000 train / 1,000,000</text>
+<text x="578.0" y="2708" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">test, all 218,622 fraud kept</text>
+<text x="578.0" y="2726" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">582 of 600 iterations used</text>
+<text x="578.0" y="2744" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="578.0" y="2762" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">PR-AUC        0.6943</text>
+<text x="578.0" y="2780" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">ROC-AUC       0.9528</text>
+<text x="578.0" y="2798" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">Brier         0.0821</text>
+<text x="578.0" y="2816" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">recall @0.9    0.550</text>
+<text x="578.0" y="2834" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">precision@0.9  0.776</text>
+<text x="578.0" y="2852" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="578.0" y="2870" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">NOT better than the GBT:</text>
+<text x="578.0" y="2888" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">tested on a 4.32% base rate</text>
+<text x="578.0" y="2906" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">vs the GBT's 0.163%. By lift</text>
+<text x="578.0" y="2924" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">over random, GBT 135x beats</text>
+<text x="578.0" y="2942" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">CatBoost 16x.</text>
+<rect x="1080" y="2602" width="480" height="366" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="1080" y="2602" width="480" height="4" rx="2" fill="#3f7d3a"/>
+<text x="1098.0" y="2632" font-family="Helvetica, Arial, sans-serif" font-size="15.5" font-weight="bold" text-anchor="start" fill="#1a1208">8. DASHBOARD AGGREGATES</text>
+<rect x="1394" y="2646" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="1468.0" y="2662.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="1098.0" y="2690" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">aggregates.py               </text>
+<text x="1098.0" y="2708" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="1098.0" y="2726" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">fraud rate by state / MCC /</text>
+<text x="1098.0" y="2744" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">hour / device OS / VPN /</text>
+<text x="1098.0" y="2762" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">amount bucket</text>
+<text x="1098.0" y="2780" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="1098.0" y="2798" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">confusion matrix,</text>
+<text x="1098.0" y="2816" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">PR curve points,</text>
+<text x="1098.0" y="2834" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">model comparison</text>
+<text x="1098.0" y="2852" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="1098.0" y="2870" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">6.6 GB Parquet  -&gt;  18.7 KB</text>
+<text x="1098.0" y="2888" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">of JSON, computed once so</text>
+<text x="1098.0" y="2906" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">the dashboard never queries</text>
+<text x="1098.0" y="2924" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="12.5" font-weight="normal" text-anchor="start" fill="#42342a">big data on page load</text>
+<line x1="800" y1="2968" x2="800" y2="3002" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<rect x="40" y="3002" width="1520" height="262" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="40" y="3002" width="1520" height="4" rx="2" fill="#3f7d3a"/>
+<text x="60" y="3032" font-family="Helvetica, Arial, sans-serif" font-size="17.5" font-weight="bold" text-anchor="start" fill="#1a1208">9.  FastAPI INFERENCE SERVICE</text>
+<rect x="1394" y="3014" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="1468.0" y="3030.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="60" y="3058" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">Loads the CatBoost model ONCE at startup - a SparkSession would cost seconds</text>
+<text x="60" y="3078" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">per call, CatBoost answers in milliseconds</text>
+<text x="60" y="3098" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="3118" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">POST /predict         -&gt;  verdict, P(fraud), top-5 SHAP contributions</text>
+<text x="60" y="3138" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">GET  /aggregates/*    -&gt;  precomputed JSON from Phase 8</text>
+<text x="60" y="3158" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">GET  /stream/recent   -&gt;  latest streaming verdicts</text>
+<text x="60" y="3178" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="3198" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">CALIBRATION: weighted training inflates raw scores ~1:600 in odds, so an</text>
+<text x="60" y="3218" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">ordinary grocery transaction returned ~50%. The API applies a prior shift</text>
+<text x="60" y="3238" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">(odds_true = odds_model x base_odds) before responding. Ranking unchanged.</text>
+<line x1="800" y1="3264" x2="800" y2="3298" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<rect x="40" y="3298" width="1520" height="244" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="40" y="3298" width="1520" height="4" rx="2" fill="#3f7d3a"/>
+<text x="60" y="3328" font-family="Helvetica, Arial, sans-serif" font-size="17.5" font-weight="bold" text-anchor="start" fill="#1a1208">10.  REACT ANALYTICS DASHBOARD</text>
+<rect x="1394" y="3310" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="1468.0" y="3326.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="60" y="3354" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13" font-weight="bold" text-anchor="start" fill="#7a6753">Vite + React + Recharts</text>
+<text x="60" y="3376" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">TAB 1  Live scoring : transaction form -&gt; verdict badge, probability gauge,</text>
+<text x="60" y="3396" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">                      SHAP waterfall</text>
+<text x="60" y="3416" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">TAB 2  Analytics    : fraud-rate map by state, MCC bars, hourly curve, amount</text>
+<text x="60" y="3436" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">                      distribution, model comparison, MapReduce vs Spark</text>
+<text x="60" y="3456" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">                      benchmark, live verdict feed</text>
+<text x="60" y="3476" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="3496" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">Risk shown as a MULTIPLE of the 0.1650% base rate: an absolute 50%</text>
+<text x="60" y="3516" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">threshold would essentially never fire on this class balance.</text>
+<line x1="800" y1="3542" x2="800" y2="3576" stroke="#1a1208" stroke-width="3" marker-end="url(#ar)"/>
+<rect x="40" y="3576" width="1520" height="282" rx="6" fill="#faf7f0" stroke="#3f7d3a" stroke-width="2.5"/>
+<rect x="40" y="3576" width="1520" height="4" rx="2" fill="#3f7d3a"/>
+<text x="60" y="3606" font-family="Helvetica, Arial, sans-serif" font-size="17.5" font-weight="bold" text-anchor="start" fill="#1a1208">11.  SPARK STRUCTURED STREAMING SCORER   (VELOCITY REQUIREMENT)</text>
+<rect x="1394" y="3588" width="148" height="24" rx="12" fill="#e8f3e6" stroke="#3f7d3a" stroke-width="1.6"/>
+<text x="1468.0" y="3604.5" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="bold" text-anchor="middle" fill="#2c5c28">COMPLETED</text>
+<text x="60" y="3632" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">readStream on an HDFS file source with an explicit StructType</text>
+<text x="60" y="3652" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">   - streaming file sources CANNOT infer schema</text>
+<text x="60" y="3672" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">loads the saved GBT PipelineModel  -&gt;  scores each micro-batch</text>
+<text x="60" y="3692" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">writes checkpointed verdicts to HDFS as Parquet</text>
+<text x="60" y="3712" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">feed.sh drips CSV files into the watched directory for a live demonstration</text>
+<text x="60" y="3732" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="3752" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">WRITTEN IN SCALA: spark-master is Alpine 3.10 (Python 3.7 only) and the</text>
+<text x="60" y="3772" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">nodemanager is Debian 9 (Python 3.5 only). PySpark refuses to run across</text>
+<text x="60" y="3792" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">minor versions, and Scala launches no Python workers.</text>
+<text x="60" y="3812" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a"></text>
+<text x="60" y="3832" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="start" fill="#42342a">MEASURED RUN:  12 micro-batches  |  6,000 rows scored  |  894 flagged</text>
+<rect x="40" y="3888" width="1520" height="128" rx="6" fill="#f2ece0" stroke="#1a1208" stroke-width="3"/>
+<text x="800.0" y="3922" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#1a1208">RESOURCE MANAGEMENT</text>
+<text x="800.0" y="3950" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="middle" fill="#42342a">Every distributed job above - MapReduce, Scala ETL, MLlib training, tuning,</text>
+<text x="800.0" y="3970" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="middle" fill="#42342a">aggregates, streaming - is submitted to and scheduled by YARN. YARN performs no</text>
+<text x="800.0" y="3990" font-family="'DejaVu Sans Mono', Consolas, monospace" font-size="13.5" font-weight="normal" text-anchor="middle" fill="#42342a">computation; it allocates containers (6144 MB / 8 vCores) in which the engines run.</text>
+</svg>
