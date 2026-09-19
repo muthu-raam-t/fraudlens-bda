@@ -1,0 +1,232 @@
+/* =========================================================================
+   FraudLens console
+
+   Colour is semantic here, not decorative: the green/amber/red ramp is
+   reserved exclusively for risk bands, so an analyst can read severity
+   without reading text. Everything else stays in cool neutrals with one
+   signal blue for interaction. Plex Mono carries every figure, because
+   tabular numerals matter when comparing amounts and probabilities.
+   ========================================================================= */
+
+:root {
+  --ink:        #10141c;
+  --ink-2:      #364152;
+  --ink-3:      #697586;
+  --paper:      #ffffff;
+  --field:      #eef1f6;
+  --field-2:    #e3e8f0;
+  --rule:       #cfd6e2;
+  --signal:     #1f5fa8;
+  --signal-ink: #16467d;
+
+  --risk-minimal:  #1d7a4c;
+  --risk-low:      #4b8b3b;
+  --risk-elevated: #b07d18;
+  --risk-high:     #c2601c;
+  --risk-critical: #b02525;
+
+  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------- shell */
+.masthead {
+  background: var(--ink);
+  color: #fff;
+  padding: 18px 28px;
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.masthead h1 { font-size: 19px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+.masthead .sub { color: #9aa6b8; font-size: 13px; font-family: var(--mono); }
+.masthead .spacer { flex: 1; }
+.masthead .stat { font-family: var(--mono); font-size: 12.5px; color: #9aa6b8; }
+.masthead .stat b { color: #fff; font-weight: 500; }
+
+.tabs { display: flex; gap: 2px; background: var(--ink); padding: 0 28px; }
+.tabs button {
+  appearance: none;
+  border: 0;
+  background: #1c2330;
+  color: #9aa6b8;
+  font: 500 14px var(--sans);
+  padding: 11px 20px;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+}
+.tabs button[aria-selected='true'] { background: var(--field); color: var(--ink); }
+.tabs button:focus-visible { outline: 2px solid #7aa9e0; outline-offset: -3px; }
+
+main { padding: 24px 28px 56px; max-width: 1500px; }
+
+/* ---------------------------------------------------------------- panels */
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+}
+.panel > h2 {
+  margin: 0;
+  padding: 13px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+}
+.panel > .body { padding: 18px; }
+
+.score-layout { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start; }
+@media (max-width: 1000px) { .score-layout { grid-template-columns: 1fr; } }
+
+/* ---------------------------------------------------------------- form */
+.field-row { margin-bottom: 13px; }
+.field-row label {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+}
+.field-row input, .field-row select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--paper);
+  font: 500 14px var(--mono);
+  color: var(--ink);
+}
+.field-row input:focus, .field-row select:focus {
+  outline: 2px solid var(--signal);
+  outline-offset: -1px;
+  border-color: var(--signal);
+}
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+
+button.primary {
+  width: 100%;
+  margin-top: 6px;
+  padding: 11px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--signal);
+  color: #fff;
+  font: 600 15px var(--sans);
+  cursor: pointer;
+}
+button.primary:hover { background: var(--signal-ink); }
+button.primary:disabled { background: var(--ink-3); cursor: progress; }
+button.primary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* ------------------------------------------------------------- verdict */
+.verdict { display: flex; align-items: flex-end; gap: 26px; flex-wrap: wrap; }
+.prob {
+  font-family: var(--mono);
+  font-size: 62px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.verdict .label { font-size: 13px; color: var(--ink-3); margin-bottom: 6px; }
+.badge {
+  display: inline-block;
+  padding: 5px 13px;
+  border-radius: 3px;
+  color: #fff;
+  font: 600 13px var(--sans);
+}
+
+.meter { margin-top: 20px; }
+.meter .track {
+  position: relative;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(to right,
+    var(--risk-minimal) 0%, var(--risk-low) 15%, var(--risk-elevated) 40%,
+    var(--risk-high) 70%, var(--risk-critical) 100%);
+}
+.meter .needle {
+  position: absolute;
+  top: -5px;
+  width: 3px;
+  height: 20px;
+  background: var(--ink);
+  border-radius: 2px;
+  transform: translateX(-1.5px);
+}
+.meter .scale {
+  display: flex;
+  justify-content: space-between;
+  font: 400 11px var(--mono);
+  color: var(--ink-3);
+  margin-top: 6px;
+}
+
+/* ------------------------------------------------------------ waterfall */
+.wf { margin-top: 24px; }
+.wf h3 { font-size: 13.5px; font-weight: 600; margin: 0 0 4px; }
+.wf p.note { font-size: 12.5px; color: var(--ink-3); margin: 0 0 14px; }
+.wf-row { display: grid; grid-template-columns: 210px 1fr 78px; gap: 12px; align-items: center; margin-bottom: 7px; }
+.wf-name { font: 500 12.5px var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wf-name span { color: var(--ink-3); font-weight: 400; }
+.wf-bar { position: relative; height: 18px; background: var(--field); border-radius: 2px; }
+.wf-bar .mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--rule); }
+.wf-bar .fill { position: absolute; top: 2px; bottom: 2px; border-radius: 2px; }
+.wf-val { font: 500 12.5px var(--mono); text-align: right; }
+
+/* ------------------------------------------------------------ analytics */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); gap: 20px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-bottom: 20px; }
+.kpi { background: var(--paper); padding: 15px 18px; }
+.kpi .v { font: 600 25px var(--mono); letter-spacing: -0.02em; }
+.kpi .k { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+
+table.data { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.data th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--ink-3);
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--rule);
+}
+table.data td { padding: 7px 10px; border-bottom: 1px solid var(--field-2); font-family: var(--mono); font-size: 13px; }
+table.data td.name { font-family: var(--sans); }
+table.data tr:last-child td { border-bottom: 0; }
+table.data td.num { text-align: right; }
+.best td { background: #f0f6ef; font-weight: 600; }
+
+.msg { padding: 15px 18px; border-radius: 3px; font-size: 13.5px; }
+.msg.wait { background: var(--field); color: var(--ink-3); }
+.msg.bad { background: #fbeeee; color: #8a2020; border: 1px solid #e6c4c4; }
+
+.caveat {
+  margin-top: 18px;
+  padding: 13px 16px;
+  background: #fdf6e3;
+  border-left: 3px solid var(--risk-elevated);
+  font-size: 13px;
+  color: #6b5310;
+}
+.caveat b { color: #4a3a0b; }
+
+footer.foot { padding: 22px 28px 40px; color: var(--ink-3); font-size: 12.5px; }
+
+/* Secondary readouts beside the hero lift figure. */
+.verdict .secondary { font: 600 30px var(--mono); line-height: 1.1; letter-spacing: -0.02em; }
+.verdict .sublabel { font: 400 11.5px var(--mono); color: var(--ink-3); margin-top: 5px; }
