@@ -34,6 +34,8 @@ fraudlens_spark_submit() {
       --executor-cores $EXEC_CORES \
       --driver-memory $DRIVER_MEM \
       --conf spark.sql.adaptive.enabled=true \
+      --conf spark.eventLog.enabled=true \
+      --conf spark.eventLog.dir=hdfs://namenode:9000/spark-logs \
       --conf spark.driver.maxResultSize=512m \
       $app $*
   "
