@@ -55,5 +55,7 @@ docker compose exec -T "$SM" bash -c "
     --executor-cores $EXEC_CORES \
     --driver-memory $DRIVER_MEM \
     --conf spark.sql.streaming.schemaInference=false \
+    --conf spark.eventLog.enabled=true \
+    --conf spark.eventLog.dir=hdfs://namenode:9000/spark-logs \
     -i /spark-apps/stream_score.scala
 "
