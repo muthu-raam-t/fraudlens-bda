@@ -163,6 +163,34 @@ services:
     depends_on:
       - spark-master
 
+  # ===================== SPARK HISTORY SERVER =====================
+  # Replays the event logs every job writes to HDFS, so the DAG, stage list,
+  # task counts and SQL plans stay browsable AFTER a job ends. Port 4040 only
+  # exists while a driver is alive; this is the permanent view.
+  spark-history:
+    image: bde2020/spark-master:3.0.0-hadoop3.2
+    hostname: spark-history
+    restart: unless-stopped
+    ports:
+      - "18080:18080"
+    environment:
+      - HADOOP_CONF_DIR=/etc/hadoop/conf
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - SPARK_HISTORY_OPTS=-Dspark.history.fs.logDirectory=hdfs://namenode:9000/spark-logs -Dspark.history.ui.port=18080 -Dspark.history.fs.update.interval=5s
+    volumes:
+      - ./hadoop-conf:/etc/hadoop/conf:ro
+    networks:
+      - fraudlens-net
+    depends_on:
+      - namenode
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        export SPARK_HOME=/spark
+        sleep 10
+        echo "starting History Server on :18080"
+        exec /spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer
+
 networks:
   fraudlens-net:
     driver: bridge
