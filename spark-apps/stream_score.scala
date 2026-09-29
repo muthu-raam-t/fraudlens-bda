@@ -46,7 +46,7 @@ val IN_DIR     = HDFS + "/fraudlens/streaming/input"
 val OUT_DIR    = HDFS + "/fraudlens/streaming/verdicts"
 val CKPT_DIR   = HDFS + "/fraudlens/streaming/checkpoint"
 val LOCAL_OUT  = "/artifacts/stream_verdicts"
-val TIMEOUT_MS = 30L * 60L * 1000L
+val TIMEOUT_MS = 10L * 60L * 1000L
 
 spark.conf.set("spark.sql.shuffle.partitions", "8")
 
@@ -215,7 +215,7 @@ println("=" * 66)
 println(" STREAM RUNNING")
 println(" Feed it:  bash scripts/feed_stream.sh    (second terminal)")
 println(" Watch it: http://localhost:4040 -> Structured Streaming tab")
-println(" Stops automatically after 30 minutes, or press Ctrl-C.")
+println(" Stops automatically after 10 minutes, or press Ctrl-C.")
 println("=" * 66)
 println("")
 
