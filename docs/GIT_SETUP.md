@@ -60,13 +60,13 @@ Create an **empty** repo named `fraudlens-bda` on GitHub — no README, no
 cd ~/fraudlens-bda
 git init
 git branch -M main
-git config user.name  "Prapul Chandra"
-git config user.email "prapulchandra6@gmail.com"
+git config user.name  "Muthu Raam T"
+git config user.email "muthuraamt14@gmail.com"
 
 git add .
 git commit -m "Phase 0-2: cluster scaffold, Hadoop configs, dataset generator"
 
-git remote add origin git@github.com:<your-username>/fraudlens-bda.git
+git remote add origin git@github.com:muthu-raam-t/fraudlens-bda.git
 git push -u origin main
 ```
 
