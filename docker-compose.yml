@@ -191,6 +191,7 @@ services:
         echo "starting History Server on :18080"
         exec /spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer
 
+
   # ===================== KAFKA (event streaming) =====================
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
