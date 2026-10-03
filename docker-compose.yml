@@ -163,8 +163,6 @@ services:
     depends_on:
       - spark-master
 
-<<<<<<< Updated upstream
-=======
   # ===================== SPARK HISTORY SERVER =====================
   # Replays the event logs every job writes to HDFS, so the DAG, stage list,
   # task counts and SQL plans stay browsable AFTER a job ends. Port 4040 only
@@ -227,7 +225,6 @@ services:
     depends_on:
       - zookeeper
 
->>>>>>> Stashed changes
 networks:
   fraudlens-net:
     driver: bridge
