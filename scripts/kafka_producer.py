@@ -33,7 +33,8 @@ SAMPLE = "data/stream_src/sample.csv"
 # Columns the model pipeline needs. Anything else in the CSV is dropped so the
 # message stays small.
 NUMERIC = [
-    "user", "card", "day", "hour", "minute", "day_of_week", "is_weekend",
+    "user", "card", "day", "month", "year", "hour", "minute",
+    "day_of_week", "is_weekend",
     "day_of_year", "mcc", "error_flag", "vpn_flag", "geo_missing",
     "hw_missing", "imputed_city", "imputed_state", "imputed_zip",
     "is_online", "is_foreign_or_unknown", "is_night", "is_outlier",
