@@ -163,6 +163,71 @@ services:
     depends_on:
       - spark-master
 
+<<<<<<< Updated upstream
+=======
+  # ===================== SPARK HISTORY SERVER =====================
+  # Replays the event logs every job writes to HDFS, so the DAG, stage list,
+  # task counts and SQL plans stay browsable AFTER a job ends. Port 4040 only
+  # exists while a driver is alive; this is the permanent view.
+  spark-history:
+    image: bde2020/spark-master:3.0.0-hadoop3.2
+    hostname: spark-history
+    restart: unless-stopped
+    ports:
+      - "18080:18080"
+    environment:
+      - HADOOP_CONF_DIR=/etc/hadoop/conf
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - SPARK_HISTORY_OPTS=-Dspark.history.fs.logDirectory=hdfs://namenode:9000/spark-logs -Dspark.history.ui.port=18080 -Dspark.history.fs.update.interval=5s
+    volumes:
+      - ./hadoop-conf:/etc/hadoop/conf:ro
+    networks:
+      - fraudlens-net
+    depends_on:
+      - namenode
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        export SPARK_HOME=/spark
+        sleep 10
+        echo "starting History Server on :18080"
+        exec /spark/bin/spark-class org.apache.spark.deploy.history.HistoryServer
+
+  # ===================== KAFKA (event streaming) =====================
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.1
+    hostname: zookeeper
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - fraudlens-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.1
+    hostname: kafka
+    restart: unless-stopped
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,HOST://localhost:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_LOG_RETENTION_HOURS: 2
+    networks:
+      - fraudlens-net
+    depends_on:
+      - zookeeper
+
+>>>>>>> Stashed changes
 networks:
   fraudlens-net:
     driver: bridge
