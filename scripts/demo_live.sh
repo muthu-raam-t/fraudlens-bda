@@ -28,7 +28,7 @@ nohup bash scripts/run_kafka_stream.sh > "$STREAM_LOG" 2>&1 &
 PIDS+=($!)
 
 echo "         waiting for it to subscribe (up to 3 min)"
-for i in $(seq 1 90); do
+for i in $(seq 1 180); do
   if grep -q "CONSUMING FROM KAFKA" "$STREAM_LOG" 2>/dev/null; then
     echo "         consumer ready"
     break
