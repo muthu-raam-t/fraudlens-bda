@@ -25,7 +25,7 @@ echo ">>> Dashboard: http://localhost:$PORT"
 echo ">>> It refreshes every 3 s and fills in as batches are scored."
 echo "--------------------------------------------------------------"
 
-exec python3 -m streamlit run streamlit/app.py \
+exec "$PWD/.venv/bin/streamlit" run streamlit/app.py \
   --server.port "$PORT" \
   --server.address 0.0.0.0 \
   --server.headless true \

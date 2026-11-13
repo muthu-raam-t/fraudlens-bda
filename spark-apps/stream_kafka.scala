@@ -58,6 +58,8 @@ val eventSchema = StructType(Array(
   StructField("user",                        IntegerType, true),
   StructField("card",                        IntegerType, true),
   StructField("day",                         IntegerType, true),
+  StructField("month",                       IntegerType, true),
+  StructField("year",                        IntegerType, true),
   StructField("hour",                        IntegerType, true),
   StructField("minute",                      IntegerType, true),
   StructField("day_of_week",                 IntegerType, true),
@@ -237,6 +239,7 @@ val query = verdicts.writeStream
       println(f"[kafka-stream] batch $batchId%-4d | $n%5d events | $flagged%4d flagged " +
               f"| totals: $totalRows%,d scored, $totalFlagged%,d flagged")
       df.unpersist()
+      ()   // foreachBatch requires Unit; unpersist() returns a DataFrame
     }
   }
   .outputMode("append")
